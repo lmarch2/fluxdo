@@ -53,6 +53,9 @@ jobs:
           dart tool/flutterw.dart build ios --release --no-codesign
           app_path="build/ios/iphoneos/Runner.app"
           test -f "${app_path}/Runner"
+          test ! -d "${app_path}/_CodeSignature"
+          test ! -f "${app_path}/embedded.mobileprovision"
+          file "${app_path}/Runner" | grep -q "arm64"
           nm -gU "${app_path}/Runner" | grep "_doh_proxy_start_with_config_json"
 
           mkdir -p dist/Payload
