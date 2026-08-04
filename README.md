@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/lmarch2/fluxdo/releases"><img src="https://img.shields.io/badge/status-testing-orange" alt="当前状态：测试中"></a>
+  <a href="https://github.com/lmarch2/fluxdo/releases"><img src="https://img.shields.io/github/v/release/lmarch2/fluxdo?label=release" alt="GitHub Release"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/lmarch2/fluxdo" alt="License"></a>
   <img src="https://img.shields.io/badge/Flutter-3.44.0-02569B?logo=flutter" alt="Flutter 3.44.0">
   <img src="https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows%20%7C%20Linux-555" alt="支持平台">
@@ -29,7 +29,7 @@ IDCFlare 基于 [FluxDO](https://github.com/Lingyan000/fluxdo) v0.2.25 适配，
 
 ## 下载与安装
 
-已发布的安装包会出现在 [GitHub Releases](https://github.com/lmarch2/fluxdo/releases)。项目目前处于适配测试阶段，尚未发布正式 Release；不要从不明来源下载重新打包的 APK。
+首个公开版本已发布，安装包请从 [GitHub Releases](https://github.com/lmarch2/fluxdo/releases) 获取。项目目前仍处于早期适配阶段，请勿从不明来源下载重新打包的安装包。
 
 Android 安装包按 ABI 分开构建：
 
@@ -47,13 +47,16 @@ adb install -r idcflare-arm64-v8a.apk
 
 未配置 Android 签名 secrets 时，CI 和本地 release 构建会回退到调试签名。不同签名的 APK 不能直接覆盖安装；遇到签名冲突时，应先备份应用数据，再卸载旧版本。
 
+iOS Release 提供 arm64、最低 iOS 14.0 的 unsigned IPA。该文件不包含 App 代码签名和 provisioning profile，不能直接安装；需要使用 AltStore、TrollStore 或自己的 Apple Developer 证书重签。
+
 ## 当前状态
 
 - 目标站点：`https://idcflare.com`
 - Android 包名：`com.fdcflare.client`
 - 自定义协议：`idcflare://`，同时保留 Discourse 标准 `discourse://auth_redirect`
 - Android `arm64-v8a` release APK 已完成构建、包名、ABI、原生库和 v2 签名验证
-- iOS、macOS、Windows 和 Linux 工程已完成品牌与标识适配，仍需对应平台的完整构建验证
+- iOS arm64 unsigned IPA 已完成云端构建、Bundle ID、版本、原生符号和包结构验证
+- macOS、Windows 和 Linux 工程已完成品牌与标识适配，仍需对应平台的完整构建验证
 - Web 暂不支持；动态图、DoH 代理、AVIF 和 QuickJS 等功能依赖 `dart:ffi`
 - 应用内自动更新和崩溃上报默认关闭，配置独立后端后方可启用
 - Linux.DO 专属的 Credit、CDK、Connect 和元宇宙服务已关闭
