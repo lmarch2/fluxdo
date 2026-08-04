@@ -13,7 +13,7 @@ import workmanager_apple
     GeneratedPluginRegistrant.register(with: self)
 
     // 注册 iOS 后台任务 handler（必须在 didFinishLaunchingWithOptions 返回前调用）
-    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "com.fluxdo.notificationPoll", frequency: nil)
+    WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "com.fdcflare.notificationPoll", frequency: nil)
 
     // 注册 cookie 同步 channel，用于将 cookie 写入 HTTPCookieStorage.shared
     // WKWebView 的 sharedCookiesEnabled 在创建时从 HTTPCookieStorage.shared 读取 cookie
@@ -66,7 +66,7 @@ import workmanager_apple
 
       // 注册浏览器 channel（应用链接解析与启动）
       let browserChannel = FlutterMethodChannel(
-        name: "com.github.lingyan000.fluxdo/browser",
+        name: "com.fdcflare.client/browser",
         binaryMessenger: controller.binaryMessenger
       )
       browserChannel.setMethodCallHandler { (call, result) in
@@ -92,7 +92,7 @@ import workmanager_apple
       }
 
       let appIconChannel = FlutterMethodChannel(
-        name: "com.github.lingyan000.fluxdo/app_icon",
+        name: "com.fdcflare.client/app_icon",
         binaryMessenger: controller.binaryMessenger
       )
       appIconChannel.setMethodCallHandler { (call, result) in

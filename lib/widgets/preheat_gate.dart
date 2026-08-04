@@ -211,7 +211,7 @@ class _PreheatLoadingState extends State<_PreheatLoading> {
                 PreheatLogo(style: widget.iconStyle, size: 108),
                 const SizedBox(height: 24),
                 Text(
-                  'FluxDO',
+                  'IDCFlare',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.w600,

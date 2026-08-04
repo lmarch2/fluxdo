@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/s.dart';
+import '../constants.dart';
 
 /// APK 资源信息
 class ApkAsset {
@@ -83,6 +84,7 @@ class UpdateInfo {
 
 /// 应用更新检查服务
 class UpdateService {
+  static const bool enabled = AppConstants.enableAppUpdates;
   static const String _repository = 'Lingyan000/fluxdo';
   static const String _apiUrl =
       'https://api.github.com/repos/$_repository/releases/latest';
@@ -103,7 +105,7 @@ class UpdateService {
 
   /// 获取自动检查更新设置
   bool getAutoCheckUpdate() {
-    return _prefs?.getBool(_autoCheckUpdateKey) ?? true;
+    return enabled && (_prefs?.getBool(_autoCheckUpdateKey) ?? false);
   }
 
   /// 设置自动检查更新
@@ -158,6 +160,7 @@ class UpdateService {
   /// 如果设置中禁用了自动检查，则不执行
   /// 返回 [UpdateInfo] 如果有更新，否则返回 null
   Future<UpdateInfo?> autoCheckUpdate() async {
+    if (!enabled) return null;
     if (!getAutoCheckUpdate()) return null;
 
     try {
@@ -176,6 +179,9 @@ class UpdateService {
   /// 返回 [UpdateInfo] 如果检查成功
   /// 抛出异常如果检查失败
   Future<UpdateInfo> checkForUpdate({bool useCache = false}) async {
+    if (!enabled) {
+      throw StateError('当前分支未配置发布仓库');
+    }
     final currentVersion = await getCurrentVersion();
 
     // 检查缓存是否有效
@@ -195,7 +201,7 @@ class UpdateService {
         options: Options(
           responseType: ResponseType.json,
           headers: {
-            'User-Agent': 'FluxDO-App',
+            'User-Agent': 'IDCFlare-App',
             'Accept': 'application/vnd.github.v3+json',
             if (storedEtag != null) 'If-None-Match': storedEtag,
           },

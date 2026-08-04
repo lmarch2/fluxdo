@@ -19,8 +19,8 @@
   "about_feedback": "反馈问题",
   "about_info": "信息",
   "about_latestVersion": "已是最新版本",
-  "about_legalese": "非官方 Linux.do 客户端\n基于 Flutter & Material 3",
-  "about_noUpdateContent": "当前版本: {version}\n您正在使用最新版本的 FluxDO，无需更新。",
+  "about_legalese": "非官方 IDC Flare 客户端\n基于 FluxDO、Flutter 与 Material 3",
+  "about_noUpdateContent": "当前版本: {version}\n您正在使用最新版本的 IDCFlare，无需更新。",
   "@about_noUpdateContent": {
     "placeholders": {
       "version": {

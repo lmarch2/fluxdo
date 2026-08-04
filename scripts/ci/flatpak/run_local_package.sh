@@ -4,10 +4,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
-ARTIFACT_PATH="${PROJECT_ROOT}/.artifacts/flatpak/fluxdo-flatpak-source-tree.tar.gz"
+ARTIFACT_PATH="${PROJECT_ROOT}/.artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz"
 CONTAINER_IMAGE="${FLATPAK_CI_IMAGE:-ghcr.io/flathub-infra/flatpak-github-actions:gnome-48}"
-OUTPUT_BUNDLE="${PROJECT_ROOT}/fluxdo-linux-x86_64.flatpak"
-WPE_LAYER_ASSET="fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst"
+OUTPUT_BUNDLE="${PROJECT_ROOT}/idcflare-linux-x86_64.flatpak"
+WPE_LAYER_ASSET="idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst"
 WPE_LAYER_VERSION_FILE="${PROJECT_ROOT}/flatpak/wpe-layer.version"
 
 detect_github_repo() {
@@ -24,7 +24,8 @@ detect_github_repo() {
     return
   fi
 
-  printf '%s\n' "Lingyan000/fluxdo"
+  echo "Unable to detect a GitHub repository; set GITHUB_REPOSITORY or WPE_LAYER_BASE_URL." >&2
+  return 1
 }
 
 if ! command -v docker >/dev/null 2>&1; then
@@ -51,7 +52,7 @@ cleanup_generated_artifacts() {
   docker run --rm \
     -v "${PROJECT_ROOT}:/workspace" \
     "${CONTAINER_IMAGE}" \
-    sh -lc 'rm -rf /workspace/flatpak/stage/source-tree /workspace/flatpak/stage/wpe-layer /workspace/flatpak_app /workspace/repo /workspace/fluxdo-linux-x86_64.flatpak'
+    sh -lc 'rm -rf /workspace/flatpak/stage/source-tree /workspace/flatpak/stage/wpe-layer /workspace/flatpak_app /workspace/repo /workspace/idcflare-linux-x86_64.flatpak'
 }
 
 prepare_wpe_layer() {
@@ -118,8 +119,8 @@ docker run --rm --privileged \
       --ccache \
       --verbose \
       flatpak_app \
-      flatpak/com.github.lingyan000.fluxdo.yml
-    flatpak build-bundle repo fluxdo-linux-x86_64.flatpak com.github.lingyan000.fluxdo stable
+      flatpak/com.fdcflare.client.yml
+    flatpak build-bundle repo idcflare-linux-x86_64.flatpak com.fdcflare.client stable
   '
 
 echo "Flatpak bundle ready:"

@@ -1,11 +1,6 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="512" cy="512" r="448" fill="#F0F0F0"/>
-<mask id="mask0_0_8" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="91" y="91" width="842" height="842">
-<circle cx="512" cy="512" r="421" fill="white"/>
-</mask>
-<g mask="url(#mask0_0_8)">
-<rect x="91" y="700" width="842" height="233" fill="#FFB003"/>
-<rect x="91" y="324" width="842" height="376" fill="#F0F0F0"/>
-<rect x="91" y="91" width="842" height="233" fill="#1C1C1E"/>
-</g>
+  <title>IDC Flare</title>
+  <circle cx="512" cy="512" r="480" fill="#B1161A"/>
+  <path fill="#FFFFFF" d="M214 274H356V750H214V274ZM455 274H800V377H597V431H769V532H597V750H455V274Z"/>
+  <path fill="#FFFFFF" d="M750 635L800 664V722L750 751L700 722V664L750 635Z"/>
 </svg>

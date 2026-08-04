@@ -4,14 +4,14 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.fluxdo.notificationPoll</string>
+		<string>com.fdcflare.notificationPoll</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>FluxDO</string>
+	<string>IDCFlare</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,7 +19,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>fluxdo</string>
+	<string>idcflare</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -32,10 +32,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.fluxdo.app</string>
+			<string>com.fdcflare.client</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fluxdo</string>
+				<string>idcflare</string>
 				<string>discourse</string>
 			</array>
 		</dict>

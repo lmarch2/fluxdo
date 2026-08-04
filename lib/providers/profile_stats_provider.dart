@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../constants.dart';
 import '../models/profile_stats_config.dart';
 import 'theme_provider.dart'; // sharedPreferencesProvider
 
@@ -14,7 +15,22 @@ class ProfileStatsConfigNotifier extends Notifier<ProfileStatsConfig> {
     final jsonStr = prefs.getString(_configKey);
     if (jsonStr != null) {
       try {
-        return ProfileStatsConfig.fromJsonString(jsonStr);
+        final config = ProfileStatsConfig.fromJsonString(jsonStr);
+        if (!AppConstants.enableLinuxDoServices &&
+            config.dataSource == StatsDataSource.connect) {
+          final compatible = config.enabledStats
+              .where(
+                (stat) => isStatCompatible(stat, StatsDataSource.summary),
+              )
+              .toList();
+          return config.copyWith(
+            dataSource: StatsDataSource.summary,
+            enabledStats: compatible.isEmpty
+                ? const ProfileStatsConfig().enabledStats
+                : compatible,
+          );
+        }
+        return config;
       } catch (_) {
         // 配置损坏，使用默认值
       }
@@ -36,6 +52,10 @@ class ProfileStatsConfigNotifier extends Notifier<ProfileStatsConfig> {
   }
 
   void setDataSource(StatsDataSource source) {
+    if (!AppConstants.enableLinuxDoServices &&
+        source == StatsDataSource.connect) {
+      source = StatsDataSource.summary;
+    }
     // 切换数据源时，自动移除不兼容的统计项
     final compatible = state.enabledStats
         .where((s) => isStatCompatible(s, source))

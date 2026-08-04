@@ -206,7 +206,7 @@ def send_files(
     url = f"{api_base}/bot{token}/sendMediaGroup"
     batches = list(chunked(files, 10))
     total = len(batches)
-    caption = f"FluxDO v{version} - 安装包"[:1024]
+    caption = f"IDCFlare v{version} - 安装包"[:1024]
 
     for batch_idx, batch in enumerate(batches):
         media: list[dict] = []
@@ -271,9 +271,9 @@ def main() -> int:
 
     # hashtag 放粗体外的纯文本里，TG 才会识别，方便频道内按版本类型过滤
     if is_prerelease:
-        title_html = f"🧪 <b>FluxDO v{html_escape(version)}（预发布）</b> #beta"
+        title_html = f"🧪 <b>IDCFlare v{html_escape(version)}（预发布）</b> #beta"
     else:
-        title_html = f"🚀 <b>FluxDO v{html_escape(version)}</b> #stable"
+        title_html = f"🚀 <b>IDCFlare v{html_escape(version)}</b> #stable"
 
     notes_html = ""
     compare: tuple[str, str, str] | None = None

@@ -1,0 +1,15 @@
+Windows Registry Editor Version 5.00
+
+; IDCFlare URL Scheme Registration
+; 双击此文件或在安装程序中导入以注册 idcflare:// URL scheme
+
+[HKEY_CURRENT_USER\Software\Classes\idcflare]
+@="URL:IDCFlare Protocol"
+"URL Protocol"=""
+
+[HKEY_CURRENT_USER\Software\Classes\idcflare\shell]
+
+[HKEY_CURRENT_USER\Software\Classes\idcflare\shell\open]
+
+[HKEY_CURRENT_USER\Software\Classes\idcflare\shell\open\command]
+@="\"C:\\Program Files\\IDCFlare\\idcflare.exe\" \"%1\""

@@ -43,7 +43,7 @@
   "httpProxy_ssLink": "Shadowsocks 链接",
   "httpProxy_suppressedByVpn": "已被 VPN 自动关闭，VPN 断开后将自动恢复",
   "httpProxy_testAvailability": "测试代理可用性",
-  "httpProxy_testingProxy": "正在验证是否能通过当前代理访问 linux.do",
+  "httpProxy_testingProxy": "正在验证是否能通过当前代理访问 idcflare.com",
   "httpProxy_testingSsConfig": "正在校验 Shadowsocks 配置是否可由本地网关接管",
   "httpProxy_title": "上游代理",
   "httpProxy_username": "用户名: {username}",

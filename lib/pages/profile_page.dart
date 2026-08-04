@@ -46,6 +46,7 @@ import '../navigation/nav_action_bus.dart';
 import '../services/toast_service.dart';
 import '../utils/dialog_utils.dart';
 import '../utils/responsive.dart';
+import '../constants.dart';
 import '../services/emoji_handler.dart';
 import '../services/log/log_writer.dart';
 import '../providers/theme_provider.dart';
@@ -83,7 +84,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     _scrollController.addListener(_onScroll);
     _rightScrollController = ScrollController();
     // 启动即为活跃 tab(如默认进入本页)时允许立即渲染;否则等首次切入。
-    _balanceEverActive = widget.isActive;
+    _balanceEverActive =
+        AppConstants.enableLinuxDoServices && widget.isActive;
   }
 
   @override
@@ -93,7 +95,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     if (widget.isActive && !oldWidget.isActive) {
       // 首次切入本页才渲染余额卡片(触发 cdk/ldc 请求),避免冷启动预构建即请求。
       // didUpdateWidget 后 framework 会自动 rebuild,无需 setState。
-      _balanceEverActive = true;
+      _balanceEverActive = AppConstants.enableLinuxDoServices;
       if (!_guideShown) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _tryShowStatsGuide();
@@ -109,9 +111,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     try {
       // LDC/CDK provider 现在只 watch currentUser.username，
       // refreshSilently 不会再连带触发它们 rebuild，需要显式刷新
-      final prefs = ref.read(sharedPreferencesProvider);
-      final ldcEnabled = prefs.getBool('ldc_enabled') ?? false;
-      final cdkEnabled = prefs.getBool('cdk_enabled') ?? false;
+      final prefs = AppConstants.enableLinuxDoServices
+          ? ref.read(sharedPreferencesProvider)
+          : null;
+      final ldcEnabled = prefs?.getBool('ldc_enabled') ?? false;
+      final cdkEnabled = prefs?.getBool('cdk_enabled') ?? false;
       await Future.wait([
         ref.read(currentUserProvider.notifier).refreshSilently(force: true),
         ref.read(userSummaryProvider.notifier).refresh(),
@@ -294,7 +298,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     if (username != null && username.isNotEmpty) {
       await WebViewPage.open(
         context, 
-        'https://linux.do/u/$username/preferences/account',
+        '${AppConstants.baseUrl}/u/$username/preferences/account',
         title: context.l10n.profile_editProfile,
         injectCss: '''
           .new-user-content-wrapper {
@@ -578,6 +582,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   /// LDC/CDK 余额卡片（共用组件）
   Widget _buildBalanceCards() {
+    if (!AppConstants.enableLinuxDoServices) {
+      return const SizedBox.shrink();
+    }
     // 仅本页首次成为活跃 tab 后才渲染余额卡片;未激活时返回空,不建 Consumer、
     // 不 watch provider,从而不触发 cdk/ldc user-info 请求。
     if (!_balanceEverActive) return const SizedBox.shrink();
@@ -790,12 +797,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           title: context.l10n.profile_myBadges,
           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyBadgesPage()))
         ),
-        _buildOptionTile(
-          icon: Symbols.verified_user_rounded,
-          iconColor: Colors.green,
-          title: context.l10n.profile_trustRequirements,
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TrustLevelRequirementsPage()))
-        ),
+        if (AppConstants.enableLinuxDoServices)
+          _buildOptionTile(
+            icon: Symbols.verified_user_rounded,
+            iconColor: Colors.green,
+            title: context.l10n.profile_trustRequirements,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const TrustLevelRequirementsPage(),
+              ),
+            ),
+          ),
         if (canAccessInviteLinks)
           _buildOptionTile(
             icon: Symbols.link_rounded,
@@ -815,12 +828,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             MaterialPageRoute(builder: (_) => const ExportHistoryPage()),
           ),
         ),
-        _buildOptionTile(
-          icon: Symbols.explore_rounded,
-          iconColor: Colors.deepOrange,
-          title: context.l10n.profile_metaverse,
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MetaversePage()))
-        ),
+        if (AppConstants.enableLinuxDoServices)
+          _buildOptionTile(
+            icon: Symbols.explore_rounded,
+            iconColor: Colors.deepOrange,
+            title: context.l10n.profile_metaverse,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const MetaversePage()),
+            ),
+          ),
       ],
     );
   }

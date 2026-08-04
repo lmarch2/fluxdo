@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=IDCFlare
+Comment=IDC Flare 非官方客户端
+Exec=idcflare %u
+Icon=idcflare
+Terminal=false
+Type=Application
+Categories=Network;
+MimeType=x-scheme-handler/idcflare;x-scheme-handler/discourse;x-scheme-handler/https;
+StartupWMClass=idcflare

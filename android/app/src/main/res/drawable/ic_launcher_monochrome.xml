@@ -3,30 +3,7 @@
     android:height="1024dp"
     android:viewportWidth="1024"
     android:viewportHeight="1024">
-    
-    <group
-        android:scaleX="0.65"
-        android:scaleY="0.65"
-        android:pivotX="512"
-        android:pivotY="512">
-        
-        <!-- Base Circle (Background Ring + Middle) -> Low Opacity (20%) -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:fillAlpha="0.2"
-            android:pathData="M 512 64 A 448 448 0 1 0 512 960 A 448 448 0 1 0 512 64 Z" />
-
-        <!-- Top Segment -> Full Opacity (100%) -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:fillAlpha="1.0"
-            android:pathData="M 135.3 324 L 888.7 324 A 421 421 0 0 0 135.3 324 z" />
-            
-        <!-- Bottom Segment -> Medium Opacity (50%) -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:fillAlpha="0.5"
-            android:pathData="M 135.3 700 L 888.7 700 A 421 421 0 0 1 135.3 700 z" />
-            
+    <group android:scaleX="0.72" android:scaleY="0.72" android:pivotX="512" android:pivotY="512">
+        <path android:fillColor="#000000" android:fillType="evenOdd" android:pathData="M512,32A480,480 0,1 0,512 992A480,480 0,1 0,512 32ZM214,274H356V750H214ZM455,274H800V377H597V431H769V532H597V750H455ZM750,635L800,664V722L750,751L700,722V664Z" />
     </group>
 </vector>

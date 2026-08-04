@@ -17,7 +17,7 @@ mkdir -p "${STAGE_ROOT}"
 
 tar -xzf "${ARCHIVE_PATH}" -C "${STAGE_ROOT}"
 
-if [[ ! -x "${STAGE_ROOT}/bundle/fluxdo" ]]; then
-  echo "Expected executable not found after extraction: ${STAGE_ROOT}/bundle/fluxdo" >&2
+if [[ ! -x "${STAGE_ROOT}/bundle/idcflare" ]]; then
+  echo "Expected executable not found after extraction: ${STAGE_ROOT}/bundle/idcflare" >&2
   exit 1
 fi

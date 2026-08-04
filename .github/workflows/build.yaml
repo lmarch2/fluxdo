@@ -128,10 +128,22 @@ jobs:
 
       - name: Setup Android Signing
         if: startsWith(matrix.platform, 'android')
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_PROPERTIES: ${{ secrets.ANDROID_KEY_PROPERTIES }}
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
-          echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" > android/key.properties
-          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ] && [ -n "$ANDROID_KEY_PROPERTIES" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+            echo "$ANDROID_KEY_PROPERTIES" > android/key.properties
+          else
+            echo "Android signing secrets are not configured; using debug signing."
+          fi
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            echo "$GOOGLE_SERVICES_JSON" | base64 -d > android/app/google-services.json
+          else
+            echo "Using the checked-in dummy Firebase configuration."
+          fi
 
       - name: Configure Git for CocoaPods
         if: matrix.platform == 'ios' || matrix.platform == 'macos'
@@ -145,17 +157,17 @@ jobs:
           cmp -s core/doh_proxy/certs/ca.der android/app/src/main/res/raw/proxy_ca.der
           cmp -s core/doh_proxy/certs/ca.crt assets/certs/proxy_ca.pem
           mkdir -p dist
-          mv build/app/outputs/flutter-apk/app-release.apk dist/fluxdo-${{ matrix.arch }}.apk
+          mv build/app/outputs/flutter-apk/app-release.apk dist/idcflare-${{ matrix.arch }}.apk
 
       - name: Authenticate to Google Cloud
-        if: startsWith(matrix.platform, 'android')
+        if: startsWith(matrix.platform, 'android') && secrets.GCP_WIF_PROVIDER != '' && secrets.GCP_SA_EMAIL != ''
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
           service_account: ${{ secrets.GCP_SA_EMAIL }}
 
       - name: Upload Dart symbols to Crashlytics
-        if: startsWith(matrix.platform, 'android')
+        if: startsWith(matrix.platform, 'android') && secrets.GCP_WIF_PROVIDER != '' && secrets.GCP_SA_EMAIL != ''
         run: |
           npx -y firebase-tools@latest crashlytics:symbols:upload \
             --app=1:98542877021:android:e555169791c86bb9c950b4 \
@@ -179,8 +191,8 @@ jobs:
           cd build/ios/iphoneos
           mkdir Payload
           cp -r Runner.app Payload/
-          zip -r fluxdo-unsigned.ipa Payload
-          mv fluxdo-unsigned.ipa ../../../dist/
+          zip -r idcflare-unsigned.ipa Payload
+          mv idcflare-unsigned.ipa ../../../dist/
 
       - name: Install macOS dependencies
         if: matrix.platform == 'macos'
@@ -218,10 +230,10 @@ jobs:
           sudo security add-trusted-cert -d -p codeSign -r trustRoot \
             -k /Library/Keychains/System.keychain "$RUNNER_TEMP/codesign.cer"
           rm -f "$RUNNER_TEMP/codesign.p12"
-          security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -q "FluxDO Code Signing"
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -q "IDCFlare Code Signing"
           # 通过 Local.xcconfig 覆盖签名身份(与本地开发同一机制)
           printf '%s\n' \
-            'FLUXDO_APPLE_CODE_SIGN_IDENTITY_MACOSX = FluxDO Code Signing' \
+            'FLUXDO_APPLE_CODE_SIGN_IDENTITY_MACOSX = IDCFlare Code Signing' \
             'FLUXDO_APPLE_CODE_SIGN_STYLE = Manual' \
             'FLUXDO_APPLE_CODE_SIGNING_ALLOWED = YES' > apple/Local.xcconfig
 
@@ -234,15 +246,15 @@ jobs:
         run: |
           dart tool/flutterw.dart build macos --release
           mkdir -p dist
-          APP_PATH="build/macos/Build/Products/Release/fluxdo.app"
+          APP_PATH="build/macos/Build/Products/Release/idcflare.app"
           test -f "$APP_PATH/Contents/Frameworks/libdoh_proxy.dylib"
           test -f "$APP_PATH/Contents/Resources/native/doh_proxy_bin"
           test -x "$APP_PATH/Contents/Resources/native/doh_proxy_bin"
-          lipo -archs "$APP_PATH/Contents/MacOS/fluxdo" | grep -qw "${{ matrix.arch }}"
+          lipo -archs "$APP_PATH/Contents/MacOS/idcflare" | grep -qw "${{ matrix.arch }}"
           lipo -archs "$APP_PATH/Contents/Frameworks/libdoh_proxy.dylib" | grep -qw "${{ matrix.arch }}"
           # 有证书时校验产物确实用自签证书签名(而非静默回退 adhoc)
           if [ "$HAS_CODESIGN_CERT" = "true" ]; then
-            codesign -dvv "$APP_PATH" 2>&1 | grep "Authority=FluxDO Code Signing"
+            codesign -dvv "$APP_PATH" 2>&1 | grep "Authority=IDCFlare Code Signing"
             if codesign -dv "$APP_PATH" 2>&1 | grep -q "flags=0x2(adhoc)"; then
               echo "error: 产物仍是 adhoc 签名" >&2
               exit 1
@@ -254,17 +266,17 @@ jobs:
         run: |
           cat > dmg-config.json << 'DMGEOF'
           {
-            "title": "Fluxdo",
+            "title": "IDCFlare",
             "contents": [
               { "x": 448, "y": 344, "type": "link", "path": "/Applications" },
-              { "x": 192, "y": 344, "type": "file", "path": "build/macos/Build/Products/Release/fluxdo.app" }
+              { "x": 192, "y": 344, "type": "file", "path": "build/macos/Build/Products/Release/idcflare.app" }
             ],
             "window": {
               "size": { "width": 660, "height": 500 }
             }
           }
           DMGEOF
-          appdmg dmg-config.json "dist/fluxdo-macos-${{ matrix.arch }}.dmg"
+          appdmg dmg-config.json "dist/idcflare-macos-${{ matrix.arch }}.dmg"
 
       - name: Setup NuGet
         if: matrix.platform == 'windows'
@@ -287,7 +299,7 @@ jobs:
         if: matrix.platform == 'windows'
         run: |
           cd build\windows\x64\runner\Release
-          7z a -tzip "..\..\..\..\..\dist\fluxdo-windows-x86_64.zip" .
+          7z a -tzip "..\..\..\..\..\dist\idcflare-windows-x86_64.zip" .
 
       - name: Build Windows Installer (exe)
         if: matrix.platform == 'windows'
@@ -334,7 +346,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: flatpak-source-tree-internal
-          path: .artifacts/flatpak/fluxdo-flatpak-source-tree.tar.gz
+          path: .artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz
           if-no-files-found: error
           overwrite: true
 
@@ -359,7 +371,7 @@ jobs:
         id: fetch
         run: |
           mkdir -p dist
-          asset="fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst"
+          asset="idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst"
           base_url="https://github.com/${{ github.repository }}/releases/download/flatpak-wpe-layer-${{ steps.layer.outputs.version }}"
           if curl -fsIL "${base_url}/${asset}" > /dev/null; then
             curl -fL "${base_url}/${asset}" -o "dist/${asset}"
@@ -387,10 +399,10 @@ jobs:
             --ccache \
             --verbose \
             flatpak_wpe_layer \
-            flatpak/com.github.lingyan000.fluxdo.wpe-layer.yml
+            flatpak/com.fdcflare.client.wpe-layer.yml
           bash scripts/ci/flatpak/package_wpe_layer.sh \
             flatpak_wpe_layer \
-            dist/fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
 
       - name: Publish WPE layer release on cache miss
         if: steps.fetch.outputs.hit != 'true'
@@ -399,12 +411,12 @@ jobs:
           tag_name: flatpak-wpe-layer-${{ steps.layer.outputs.version }}
           name: Flatpak WPE Layer ${{ steps.layer.outputs.version }}
           body: |
-            Prebuilt Flatpak WPE dependency layer for Fluxdo.
+            Prebuilt Flatpak WPE dependency layer for IDCFlare.
           prerelease: true
           make_latest: false
           files: |
-            dist/fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst
-            dist/fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
+            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
           fail_on_unmatched_files: true
           overwrite_files: true
         env:
@@ -415,8 +427,8 @@ jobs:
         with:
           name: flatpak-wpe-layer-current
           path: |
-            dist/fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst
-            dist/fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
+            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
           if-no-files-found: error
           overwrite: true
 
@@ -449,7 +461,7 @@ jobs:
           echo "解包前:" && df -h /
           rm -rf flatpak/stage/source-tree
           mkdir -p flatpak/stage/source-tree
-          tar -xzf .artifacts/flatpak/fluxdo-flatpak-source-tree.tar.gz -C flatpak/stage/source-tree
+          tar -xzf .artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz -C flatpak/stage/source-tree
           rm -rf .artifacts/flatpak
           ls -la flatpak/stage/source-tree
           du -sh flatpak/stage/source-tree flatpak/stage/wpe-layer || true
@@ -458,8 +470,8 @@ jobs:
       - name: Build Flatpak bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          manifest-path: flatpak/com.github.lingyan000.fluxdo.yml
-          bundle: fluxdo-linux-x86_64.flatpak
+          manifest-path: flatpak/com.fdcflare.client.yml
+          bundle: idcflare-linux-x86_64.flatpak
           branch: stable
           repository-name: flathub
           arch: x86_64
@@ -470,7 +482,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifact-linux-flatpak-x86_64
-          path: fluxdo-linux-x86_64.flatpak
+          path: idcflare-linux-x86_64.flatpak
           if-no-files-found: error
           overwrite: true
 
@@ -618,7 +630,7 @@ jobs:
         run: |
           echo "::warning::git-cliff 失败，回退到 legacy bash"
           tags=($(git tag --merged HEAD --sort=-creatordate))
-          preTag=$(curl -s "https://api.github.com/repos/lingyan000/fluxdo/releases/latest" | \
+          preTag=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/latest" | \
           sed -nE 's/.*"tag_name": "([^"]+)".*/\1/p' || echo "")
 
           out="release_notes.md"
@@ -648,7 +660,10 @@ jobs:
 
       - name: Append release template
         run: |
-          sed 's/VERSION/${{ steps.version.outputs.VERSION }}/g' .github/release_template.md >> release_notes.md
+          sed \
+            -e 's/VERSION/${{ steps.version.outputs.VERSION }}/g' \
+            -e 's#REPOSITORY#${{ github.repository }}#g' \
+            .github/release_template.md >> release_notes.md
 
       - name: Generate SHA256 checksums
         if: env.IS_STABLE == 'true'
@@ -674,8 +689,8 @@ jobs:
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
           VERSION_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          DOWNLOAD_URL="https://github.com/lingyan000/fluxdo/releases/download/v${VERSION}/fluxdo-unsigned.ipa"
-          IPA_SIZE=$(stat -c%s "./dist/fluxdo-unsigned.ipa" 2>/dev/null || stat -f%z "./dist/fluxdo-unsigned.ipa")
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/idcflare-unsigned.ipa"
+          IPA_SIZE=$(stat -c%s "./dist/idcflare-unsigned.ipa" 2>/dev/null || stat -f%z "./dist/idcflare-unsigned.ipa")
           # 从 plain 版本按段落边界截断到 1500 字符以内，避免硬截到段落中间
           VERSION_DESC=$(awk 'BEGIN{RS=""; ORS="\n\n"; n=0} {n+=length($0)+2; if(n>1500) exit; print}' release_notes.txt)
 

@@ -162,7 +162,7 @@ class DataBackupService {
 
     final tempDir = await getTemporaryDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final file = File('${tempDir.path}/fluxdo_backup_$timestamp.json');
+    final file = File('${tempDir.path}/idcflare_backup_$timestamp.json');
     await file.writeAsString(jsonStr);
 
     return file.path;

@@ -55,7 +55,7 @@ class _PerfDiagnosticsPageState extends State<PerfDiagnosticsPage> {
     await SharePlus.instance.share(
       ShareParams(
         text: FrameJankMonitor.exportText(),
-        subject: 'FluxDO 性能诊断报告',
+        subject: 'IDCFlare 性能诊断报告',
       ),
     );
   }
@@ -71,7 +71,7 @@ class _PerfDiagnosticsPageState extends State<PerfDiagnosticsPage> {
     try {
       final text = await file.readAsString();
       await SharePlus.instance.share(
-        ShareParams(text: text, subject: 'FluxDO 性能诊断快照(上次会话)'),
+        ShareParams(text: text, subject: 'IDCFlare 性能诊断快照(上次会话)'),
       );
     } catch (e) {
       ToastService.showError('读取快照失败: $e');

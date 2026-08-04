@@ -90,6 +90,7 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
   // tonalSpot 从种子导出的经典配色,fromSeed(默认 tonalSpot)可 1:1
   // 复现全套 token(已实测 primary/container/surface/scl 一致)。
   static const List<Color> presetColors = [
+    Color(0xFFB1161A), // IDC Flare
     Color(0xFF116682), // 海洋
     Color(0xFF8E4955), // 樱花
     Color(0xFF4C662B), // 春
@@ -120,7 +121,7 @@ class ThemeNotifier extends StateNotifier<ThemeState> {
 
     // Load Color
     final savedColorValue = prefs.getInt(_seedColorKey);
-    Color seedColor = Colors.blue;
+    Color seedColor = const Color(0xFFB1161A);
     if (savedColorValue != null) {
       seedColor = Color(savedColorValue);
     }

@@ -55,7 +55,7 @@
   "notion_autoSyncOnBookmark": "收藏话题时自动同步",
   "notion_autoSyncDesc": "开启后,收藏话题(主帖)会在后台同步到 Notion。收藏单条回复不会触发",
   "notion_syncScope": "同步范围",
-  "notion_tokenSecurityNote": "Token 仅保存在本机,不会上传到任何服务器。建议为 fluxdo 单独创建一个 Internal Integration,并只把目标 Database 分享给它。",
+  "notion_tokenSecurityNote": "Token 仅保存在本机,不会上传到任何服务器。建议为 IDCFlare 单独创建一个 Internal Integration,并只把目标 Database 分享给它。",
   "notion_syncSucceed": "已同步到 Notion",
   "notion_syncFailed": "同步失败:{error}",
   "@notion_syncFailed": {

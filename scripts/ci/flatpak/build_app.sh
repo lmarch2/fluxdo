@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SOURCE_TREE_ROOT="${1:-}"
-INSTALL_ROOT="${2:-/app/fluxdo}"
+INSTALL_ROOT="${2:-/app/idcflare}"
 
 if [[ -z "${SOURCE_TREE_ROOT}" || ! -d "${SOURCE_TREE_ROOT}" ]]; then
   echo "Usage: $0 <source-tree-root> [install-root]" >&2

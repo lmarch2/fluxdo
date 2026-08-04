@@ -46,7 +46,7 @@ class UserApiKeyService {
   static const _keyPendingNonce = 'user_api_key_pending_nonce';
 
   static const String authRedirect = 'discourse://auth_redirect';
-  static const String applicationName = 'FluxDO';
+  static const String applicationName = AppConstants.appName;
   static const String scopes = 'one_time_password';
 
   /// 自愈冷却:失败后短期内不再重试,避免 key 已撤销时反复打服务端

@@ -10,7 +10,7 @@ import 'theme_provider.dart';
 
 /// 应用图标风格（用户只选择风格，深浅色由系统自适应处理）
 enum AppIconStyle {
-  /// 经典 FluxDO 图标
+  /// 经典 IDCFlare 图标
   classic,
 
   /// 现代图标
@@ -42,7 +42,7 @@ class AppIconState {
 class AppIconNotifier extends StateNotifier<AppIconState> {
   static const String _prefKey = 'pref_app_icon';
   static const _platformChannel =
-      MethodChannel('com.github.lingyan000.fluxdo/app_icon');
+      MethodChannel('com.fdcflare.client/app_icon');
   final SharedPreferences _prefs;
 
   AppIconNotifier(this._prefs) : super(const AppIconState()) {

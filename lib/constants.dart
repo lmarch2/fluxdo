@@ -5,13 +5,29 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:ua_client_hints/ua_client_hints.dart';
 import 'config/site_customization.dart';
-import 'config/sites/linuxdo.dart';
+import 'config/sites/idcflare.dart';
 import 'services/windows_webview_environment_service.dart';
 
 /// 应用常量
 class AppConstants {
   /// 当前站点自定义配置
-  static final SiteCustomization siteCustomization = linuxdoCustomization;
+  static final SiteCustomization siteCustomization = idcflareCustomization;
+
+  static const String appName = 'IDCFlare';
+  static const String siteName = 'IDC Flare';
+  static const String siteHost = 'idcflare.com';
+  static const String customScheme = 'idcflare';
+  static const String hcaptchaSiteKey =
+      'cdde8d16-7fd6-49d4-861c-f2503ae209e4';
+
+  /// IDC Flare 不提供 Linux.DO Credit、CDK 与 Connect 服务。
+  static const bool enableLinuxDoServices = false;
+
+  /// 分支未配置独立发布仓库前，禁止安装 FluxDO 上游发布包。
+  static const bool enableAppUpdates = false;
+
+  /// 当前仓库未配置独立的崩溃上报项目，避免误发到上游服务。
+  static const bool enableCrashReporting = false;
 
   /// 是否启用 WebView Cookie 同步（启动时预热 WebView）
   /// 设为 false 时，不使用 WebView 同步，Cookie 由 Dio Set-Cookie 与本地存储维护
@@ -297,8 +313,8 @@ class AppConstants {
         '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
   }
 
-  /// linux.do 域名
-  static const String baseUrl = 'https://linux.do';
+  /// IDC Flare 主站
+  static const String baseUrl = 'https://idcflare.com';
 
   /// 请求首页时是否跳过 X-CSRF-Token（用于预热）
   static const bool skipCsrfForHomeRequest = true;

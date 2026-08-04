@@ -90,10 +90,10 @@ just release -- patch --dry-run
 
 ## IDE 集成
 
-- Android Studio / IntelliJ 的共享运行配置提交在 [`.run/`](</D:/teng/Documents/i/ldx/.run/>)，不放进被忽略的 `.idea/`
-- `FluxDO` 运行配置的 before-launch 只保留一个 `Run Prepare`
+- Android Studio / IntelliJ 的共享运行配置提交在 [`.run/`](../.run/)，不放进被忽略的 `.idea/`
+- `IDCFlare` 运行配置的 before-launch 只保留一个 `Run Prepare`
 - 这个 before-launch 会串行执行 `app:prepare` 和 `native:prepare auto`，避免 IDE 按多个步骤反复弹终端
-- VS Code 的 [launch.json](/D:/teng/Documents/i/ldx/.vscode/launch.json:1) 和 [tasks.json](/D:/teng/Documents/i/ldx/.vscode/tasks.json:1) 也已切到同一套预处理链路
+- VS Code 的 [launch.json](../.vscode/launch.json) 和 [tasks.json](../.vscode/tasks.json) 也已切到同一套预处理链路
 
 ## 平台约定
 
@@ -102,7 +102,7 @@ just release -- patch --dry-run
 - 当本地签名材料缺失时，`debug` 使用默认 debug signing，`profile/release` 自动回退到 debug signing
 - Android 构建会优先使用 Android Studio 自带 JBR；如需手动指定，可设置 `FLUXDO_ANDROID_JAVA_HOME`
 - Apple 平台不再把 `DEVELOPMENT_TEAM` 写死在共享 `pbxproj`
-- 如需 Xcode 真机签名或本地签名构建，复制 [apple/Local.xcconfig.example](/D:/teng/Documents/i/ldx/apple/Local.xcconfig.example:1) 为 `apple/Local.xcconfig`，按文件内注释选择签名方案
+- 如需 Xcode 真机签名或本地签名构建，复制 [apple/Local.xcconfig.example](../apple/Local.xcconfig.example) 为 `apple/Local.xcconfig`，按文件内注释选择签名方案
 - 原生产物准备统一走 `just native -- ...` 或 `dart run tool/project_tasks.dart native:prepare ...`
 - Windows / iOS 平台工程已移除内置 cargo / shell build hook，只消费仓库脚本预先落盘的 native 产物
 - macOS 保留一个轻量级 bundle copy/sign 阶段，只负责拷贝和签名已准备好的 native 产物
@@ -115,22 +115,22 @@ macOS 默认走 adhoc 签名（`AppInfo.xcconfig` 中 `FLUXDO_APPLE_CODE_SIGN_ID
 
 ```bash
 # 1. 生成 100 年期自签代码签名证书 + p12（目录自选，不要放进仓库）
-openssl req -x509 -newkey rsa:2048 -keyout fluxdo-key.pem -out fluxdo-cert.pem \
-  -days 36500 -nodes -subj "/CN=FluxDO Code Signing" \
+openssl req -x509 -newkey rsa:2048 -keyout idcflare-key.pem -out idcflare-cert.pem \
+  -days 36500 -nodes -subj "/CN=IDCFlare Code Signing" \
   -addext "keyUsage=critical,digitalSignature" \
   -addext "extendedKeyUsage=critical,codeSigning" \
   -addext "basicConstraints=critical,CA:false"
-openssl pkcs12 -export -legacy -out fluxdo-codesign.p12 \
-  -inkey fluxdo-key.pem -in fluxdo-cert.pem -passout pass:<密码>
+openssl pkcs12 -export -legacy -out idcflare-codesign.p12 \
+  -inkey idcflare-key.pem -in idcflare-cert.pem -passout pass:<密码>
 
 # 2. 导入 login 钥匙串并授信（codeSign 策略）
-security import fluxdo-codesign.p12 -k ~/Library/Keychains/login.keychain-db \
+security import idcflare-codesign.p12 -k ~/Library/Keychains/login.keychain-db \
   -P <密码> -T /usr/bin/codesign
 security add-trusted-cert -p codeSign -r trustRoot \
-  -k ~/Library/Keychains/login.keychain-db fluxdo-cert.pem
+  -k ~/Library/Keychains/login.keychain-db idcflare-cert.pem
 
 # 3. 确认 identity 有效
-security find-identity -v -p codesigning   # 应列出 "FluxDO Code Signing"
+security find-identity -v -p codesigning   # 应列出 "IDCFlare Code Signing"
 ```
 
 然后在 `apple/Local.xcconfig` 中启用（见 example 文件的「用法 1」）。切换后首次启动钥匙串还会弹最后一次（旧 ACL 只认 adhoc 旧构建），点「始终允许」后 rebuild 不再弹。

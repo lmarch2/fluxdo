@@ -1,11 +1,11 @@
-app-id: com.github.lingyan000.fluxdo
+app-id: com.fdcflare.client
 runtime: org.gnome.Platform
 runtime-version: '48'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm20
   - org.freedesktop.Sdk.Extension.rust-stable
-command: fluxdo
+command: idcflare
 separate-locales: false
 build-options:
   append-path: /usr/lib/sdk/llvm20/bin
@@ -35,17 +35,17 @@ modules:
         done
     sources:
       - type: archive
-        path: stage/wpe-layer/fluxdo-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+        path: stage/wpe-layer/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
 
-  - name: fluxdo
+  - name: idcflare
     buildsystem: simple
     build-commands:
-      - install -d /app/bin /app/fluxdo /app/share/applications /app/share/icons/hicolor/512x512/apps /app/share/metainfo
-      - bash source-tree/scripts/ci/flatpak/build_app.sh "$(pwd)/source-tree" /app/fluxdo
-      - install -Dm755 source-tree/flatpak/fluxdo-wrapper.sh /app/bin/fluxdo
-      - install -Dm644 source-tree/flatpak/com.github.lingyan000.fluxdo.desktop /app/share/applications/com.github.lingyan000.fluxdo.desktop
-      - install -Dm644 source-tree/flatpak/com.github.lingyan000.fluxdo.metainfo.xml /app/share/metainfo/com.github.lingyan000.fluxdo.metainfo.xml
-      - install -Dm644 source-tree/flatpak/icons/com.github.lingyan000.fluxdo.png /app/share/icons/hicolor/512x512/apps/com.github.lingyan000.fluxdo.png
+      - install -d /app/bin /app/idcflare /app/share/applications /app/share/icons/hicolor/512x512/apps /app/share/metainfo
+      - bash source-tree/scripts/ci/flatpak/build_app.sh "$(pwd)/source-tree" /app/idcflare
+      - install -Dm755 source-tree/flatpak/idcflare-wrapper.sh /app/bin/idcflare
+      - install -Dm644 source-tree/flatpak/com.fdcflare.client.desktop /app/share/applications/com.fdcflare.client.desktop
+      - install -Dm644 source-tree/flatpak/com.fdcflare.client.metainfo.xml /app/share/metainfo/com.fdcflare.client.metainfo.xml
+      - install -Dm644 source-tree/flatpak/icons/com.fdcflare.client.png /app/share/icons/hicolor/512x512/apps/com.fdcflare.client.png
       # 媒体压缩:静态 ffmpeg 进 /app/bin(PATH),app 运行时按 PATH 查找。
       # 沙箱构建阶段禁网,CMake 的构建期下载会跳过(WARNING),CLI 由
       # 本 source 在源准备阶段(允许联网+sha256 校验)提供。

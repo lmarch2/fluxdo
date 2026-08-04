@@ -103,7 +103,7 @@ class AppPreferences {
   /// 自动填充登录凭证
   final bool autoFillLogin;
 
-  /// 自动识别剪贴板中的 Linux.do 话题链接
+  /// 自动识别剪贴板中的 IDC Flare 话题链接
   final bool clipboardTopicLinkDetection;
 
   /// 话题关键词过滤列表（原样存储，仅 trim 去重去空，保留用户输入大小写以便回显）
@@ -443,7 +443,7 @@ class PreferencesNotifier extends StateNotifier<AppPreferences> {
   static const String _topicCardStyleKey = 'pref_topic_card_style';
 
   static const _crashlyticsChannel = MethodChannel(
-    'com.github.lingyan000.fluxdo/crashlytics',
+    'com.fdcflare.client/crashlytics',
   );
 
   PreferencesNotifier(this._prefs)

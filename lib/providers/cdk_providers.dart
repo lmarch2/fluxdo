@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants.dart';
 import '../models/cdk_user_info.dart';
 import '../services/cdk_oauth_service.dart';
 import '../services/network/exceptions/oauth_exception.dart';
@@ -21,6 +22,8 @@ class CdkUserInfoNotifier extends AsyncNotifier<CdkUserInfo?> {
 
   @override
   Future<CdkUserInfo?> build() async {
+    if (!AppConstants.enableLinuxDoServices) return null;
+
     final prefs = await SharedPreferences.getInstance();
     // 只 watch username:currentUser 对象其他字段刷新时不应触发 CDK 接口的重新请求
     final currentUsername = ref.watch(
@@ -71,6 +74,8 @@ class CdkUserInfoNotifier extends AsyncNotifier<CdkUserInfo?> {
   }
 
   Future<CdkUserInfo?> _doFetchUserInfo() async {
+    if (!AppConstants.enableLinuxDoServices) return null;
+
     final prefs = await SharedPreferences.getInstance();
     final enabled = prefs.getBool(_cdkEnabledKey) ?? false;
 

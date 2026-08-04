@@ -107,8 +107,8 @@ class DeepLinkService {
       return;
     }
 
-    // 自定义 scheme (fluxdo://...)
-    if (uri.scheme == 'fluxdo') {
+    // 自定义 scheme (idcflare://...)
+    if (uri.scheme == AppConstants.customScheme) {
       _handleCustomScheme(context, uri);
       return;
     }
@@ -146,14 +146,14 @@ class DeepLinkService {
     }
 
     // 邮箱链接登录：/session/email-login/{token}
-    if (uri.host == 'linux.do' &&
+    if (_isIdcFlareHost(uri.host) &&
         uri.path.startsWith('/session/email-login/')) {
       _handleEmailLogin(context, url);
       return;
     }
 
-    // 其他 linux.do 链接：使用内置浏览器
-    if (uri.host == 'linux.do' || uri.host.endsWith('.linux.do')) {
+    // 其他 IDC Flare 链接：使用内置浏览器
+    if (_isIdcFlareHost(uri.host)) {
       WebViewPage.open(context, url);
       return;
     }
@@ -163,9 +163,9 @@ class DeepLinkService {
 
   /// 处理自定义 scheme
   /// 支持格式：
-  /// - fluxdo://topic/123
-  /// - fluxdo://topic/123/5 (指定楼层)
-  /// - fluxdo://user/username
+  /// - idcflare://topic/123
+  /// - idcflare://topic/123/5 (指定楼层)
+  /// - idcflare://user/username
   void _handleCustomScheme(BuildContext context, Uri uri) {
     final pathSegments = [
       if (uri.host.isNotEmpty) uri.host,
@@ -260,17 +260,17 @@ class DeepLinkService {
   }
 
   static bool _canHandleUri(Uri uri) {
-    if (uri.scheme == 'fluxdo') return true;
+    if (uri.scheme == AppConstants.customScheme) return true;
     // 浏览器授权登录回调(仅 auth_redirect,不接管其他 discourse:// 链接)
     if (uri.scheme == 'discourse' && uri.host == 'auth_redirect') return true;
     if (uri.scheme != 'http' && uri.scheme != 'https') return false;
-    return _isLinuxDoHost(uri.host);
+    return _isIdcFlareHost(uri.host);
   }
 
-  static bool _isLinuxDoHost(String host) {
+  static bool _isIdcFlareHost(String host) {
     final normalizedHost = host.toLowerCase();
-    return normalizedHost == 'linux.do' ||
-        normalizedHost == 'www.linux.do' ||
-        normalizedHost.endsWith('.linux.do');
+    return normalizedHost == AppConstants.siteHost ||
+        normalizedHost == 'www.${AppConstants.siteHost}' ||
+        normalizedHost.endsWith('.${AppConstants.siteHost}');
   }
 }

@@ -443,7 +443,7 @@ class AiChatMessageItem extends StatelessWidget {
       }
       await Gal.putImageBytes(
         bytes,
-        name: 'fluxdo_ai_${DateTime.now().millisecondsSinceEpoch}.png',
+        name: 'idcflare_ai_${DateTime.now().millisecondsSinceEpoch}.png',
       );
       if (context.mounted) {
         ToastService.showSuccess(context.l10n.ai_imageSaved);

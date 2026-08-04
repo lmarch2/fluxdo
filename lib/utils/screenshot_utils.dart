@@ -146,7 +146,7 @@ class ScreenshotUtils {
       }
 
       // 生成文件名
-      final name = filename ?? 'fluxdo_share_${DateTime.now().millisecondsSinceEpoch}';
+      final name = filename ?? 'idcflare_share_${DateTime.now().millisecondsSinceEpoch}';
       await Gal.putImageBytes(bytes, name: '$name.png');
       return true;
     } on GalException catch (e) {
@@ -163,7 +163,7 @@ class ScreenshotUtils {
     try {
       // 创建临时文件
       final tempDir = await getTemporaryDirectory();
-      final name = filename ?? 'fluxdo_share_${DateTime.now().millisecondsSinceEpoch}';
+      final name = filename ?? 'idcflare_share_${DateTime.now().millisecondsSinceEpoch}';
       final file = File('${tempDir.path}/$name.png');
       await file.writeAsBytes(bytes);
 

@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "FluxDO",
+            "name": "IDCFlare",
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "Run Prepare (debug)",
@@ -14,7 +14,7 @@
             ]
         },
         {
-            "name": "FluxDO (profile mode)",
+            "name": "IDCFlare (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
@@ -24,7 +24,7 @@
             ]
         },
         {
-            "name": "FluxDO (release mode)",
+            "name": "IDCFlare (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",

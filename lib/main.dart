@@ -230,7 +230,7 @@ Future<void> main() async {
     ProxyCertificate.initialize(),
     if (Platform.isWindows)
       WindowsWebViewEnvironmentService.instance.initialize(),
-    // Windows 深链协议注册(discourse:// / fluxdo://):写 HKCU 免管理员,
+    // Windows 深链协议注册(discourse:// / idcflare://):写 HKCU 免管理员,
     // 幂等,失败不阻塞启动。其他平台由清单/plist 声明,此调用为 no-op。
     if (Platform.isWindows) ensureWindowsProtocolsRegistered(),
     CookieJarService().initialize(),
@@ -306,7 +306,8 @@ Future<void> main() async {
   await MigrationService.runAll(prefs);
 
   // 阶段 2：依赖 prefs 的步骤并行
-  final crashlyticsEnabled = prefs.getBool('pref_crashlytics') ?? true;
+  final crashlyticsEnabled = AppConstants.enableCrashReporting &&
+      (prefs.getBool('pref_crashlytics') ?? false);
   final developerMode = prefs.getBool('developer_mode') ?? false;
   CfChallengeLogger.setEnabled(developerMode);
   // 开发者模式下 debug 级日志落盘（高频追踪信息）
@@ -316,7 +317,7 @@ Future<void> main() async {
     ProxySettingsService.instance.initialize(prefs),
     if (Platform.isAndroid)
       MethodChannel(
-        'com.github.lingyan000.fluxdo/crashlytics',
+        'com.fdcflare.client/crashlytics',
       ).invokeMethod('setCrashlyticsEnabled', {'enabled': crashlyticsEnabled}),
   ]);
   // rhttp (Rust reqwest) 初始化：在 ProxySettingsService 之后、NetworkSettingsService 之前
@@ -676,7 +677,7 @@ class MainApp extends ConsumerWidget {
               navigatorKey: navigatorKey,
               // JankNavObserver 给 [JANK] 日志加导航归因(debug/profile 观测用)
               navigatorObservers: [appRouteObserver, JankNavObserver()],
-              title: 'FluxDO',
+              title: 'IDCFlare',
               locale: TranslationProvider.of(context).flutterLocale,
               localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,
@@ -940,7 +941,7 @@ class _MainPageState extends ConsumerState<MainPage>
     if (!mounted) return;
 
     // 一次性数据收集告知（仅 Android）
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid && AppConstants.enableCrashReporting) {
       await _showCrashlyticsNotice();
       if (!mounted) return;
     }

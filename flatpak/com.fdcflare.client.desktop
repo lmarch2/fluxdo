@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=IDCFlare
+Comment=IDC Flare unofficial client
+Exec=idcflare %u
+Icon=com.fdcflare.client
+Terminal=false
+Type=Application
+Categories=Network;
+MimeType=x-scheme-handler/idcflare;x-scheme-handler/discourse;
+StartupWMClass=idcflare

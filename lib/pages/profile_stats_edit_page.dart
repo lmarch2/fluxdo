@@ -11,6 +11,7 @@ import '../providers/profile_stats_provider.dart';
 import '../widgets/profile_stats_card.dart';
 import 'package:m3e_ui/m3e_ui.dart';
 import '../l10n/s.dart';
+import '../constants.dart';
 
 /// 统计卡片编辑页
 class ProfileStatsEditPage extends ConsumerStatefulWidget {
@@ -238,7 +239,11 @@ class _DataSourceSelector extends ConsumerWidget {
     final notifier = ref.read(profileStatsConfigProvider.notifier);
     return Row(
       children: [
-        for (final source in StatsDataSource.values)
+        for (final source in StatsDataSource.values.where(
+          (source) =>
+              AppConstants.enableLinuxDoServices ||
+              source == StatsDataSource.summary,
+        ))
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ChoiceChip(

@@ -214,7 +214,7 @@ class _AboutPageState extends State<AboutPage> {
             child: Column(
               children: [
                 Text(
-                  'FluxDO',
+                  'IDCFlare',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
@@ -241,19 +241,20 @@ class _AboutPageState extends State<AboutPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedCardGroup(
               children: [
-                _buildListTile(
-                  context,
-                  icon: Symbols.update_rounded,
-                  title: context.l10n.about_checkUpdate,
-                  onTap: _checkForUpdate,
-                ),
+                if (UpdateService.enabled)
+                  _buildListTile(
+                    context,
+                    icon: Symbols.update_rounded,
+                    title: context.l10n.about_checkUpdate,
+                    onTap: _checkForUpdate,
+                  ),
                 _buildListTile(
                   context,
                   icon: Symbols.description_rounded,
                   title: context.l10n.about_openSourceLicense,
                   onTap: () => showLicensePage(
                     context: context,
-                    applicationName: 'FluxDO',
+                    applicationName: 'IDCFlare',
                     applicationVersion: _version,
                     applicationLegalese: context.l10n.about_legalese,
                   ),
@@ -284,7 +285,7 @@ class _AboutPageState extends State<AboutPage> {
                   context,
                   icon: Symbols.code_rounded,
                   title: context.l10n.about_sourceCode,
-                  subtitle: 'GitHub',
+                  subtitle: 'FluxDO upstream',
                   onTap: () => launchUrl(
                     Uri.parse('https://github.com/Lingyan000/fluxdo'),
                     mode: LaunchMode.externalApplication,
@@ -311,15 +312,6 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                 ),
-                _buildListTile(
-                  context,
-                  icon: Symbols.bug_report_rounded,
-                  title: context.l10n.about_feedback,
-                  onTap: () => launchUrl(
-                    Uri.parse('https://github.com/Lingyan000/fluxdo/issues'),
-                    mode: LaunchMode.externalApplication,
-                  ),
-                ),
               ],
             ),
           ),
@@ -327,7 +319,7 @@ class _AboutPageState extends State<AboutPage> {
           const SizedBox(height: 40),
           Center(
             child: Text(
-              'Made with Flutter & \u2764\uFE0F',
+              'Built with Flutter',
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.outline,
               ),

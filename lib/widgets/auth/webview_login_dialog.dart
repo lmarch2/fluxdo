@@ -593,7 +593,7 @@ document.close();
       }
       await BoundarySyncService.instance.syncFromWebView(
         controller: controller,
-        currentUrl: 'https://linux.do/',
+        currentUrl: AppConstants.baseUrl,
         cookieNames: null,
         allowLowConfidenceSessionCookies: true,
         requestGeneration: _flowGeneration,

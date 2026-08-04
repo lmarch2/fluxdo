@@ -129,7 +129,7 @@ class AiShareImageWidget extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          'LINUX DO',
+          'IDC FLARE',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

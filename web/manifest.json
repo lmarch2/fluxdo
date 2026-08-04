@@ -1,11 +1,11 @@
 {
-    "name": "FluxDO",
-    "short_name": "FluxDO",
+    "name": "IDCFlare",
+    "short_name": "IDCFlare",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#B1161A",
+    "description": "IDC Flare 非官方跨平台客户端",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

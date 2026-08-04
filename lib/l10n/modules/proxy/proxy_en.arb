@@ -43,7 +43,7 @@
   "httpProxy_ssLink": "Shadowsocks Link",
   "httpProxy_suppressedByVpn": "Auto-disabled by VPN, will restore when VPN disconnects",
   "httpProxy_testAvailability": "Test Proxy Availability",
-  "httpProxy_testingProxy": "Verifying access to linux.do via current proxy",
+  "httpProxy_testingProxy": "Verifying access to idcflare.com via current proxy",
   "httpProxy_testingSsConfig": "Verifying Shadowsocks config can be managed by local gateway",
   "httpProxy_title": "Upstream Proxy",
   "httpProxy_username": "Username: {username}",

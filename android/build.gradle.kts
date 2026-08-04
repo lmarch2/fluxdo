@@ -81,12 +81,16 @@ subprojects {
             }
         }
 
-        // 5. quickjs_engine 0.1.1 的 CMake 漏链 NDK liblog,bridge 源码却用
-        //    __android_log_print → arm64 release 链接 undefined symbol。
-        //    经 gradle 给 CMake 注入链接参数补 -llog,不改 pub 缓存内容。
+        // 5. quickjs_engine 0.1.1 未声明 NDK 版本，AGP 会回退到自身默认的 NDK 27，
+        //    与 Flutter 3.44 使用的 NDK 28 不一致；同时它的 CMake 漏链 NDK liblog，
+        //    bridge 源码却使用 __android_log_print，导致 arm64 release 链接失败。
+        //    在 Gradle 层统一 NDK 版本并给 CMake 注入 -llog，不修改 pub 缓存内容。
         if (project.name == "quickjs_engine") {
             extensions.findByName("android")?.let { androidExt ->
                 try {
+                    androidExt.javaClass
+                        .getMethod("setNdkVersion", String::class.java)
+                        .invoke(androidExt, "28.2.13676358")
                     val defaultConfig = androidExt.javaClass
                         .getMethod("getDefaultConfig")
                         .invoke(androidExt)
@@ -101,7 +105,9 @@ subprojects {
                         .getMethod("getArguments")
                         .invoke(cmake) as MutableList<String>
                     arguments.add("-DCMAKE_SHARED_LINKER_FLAGS=-llog")
-                    logger.lifecycle("Patched quickjs_engine: link NDK liblog")
+                    logger.lifecycle(
+                        "Patched quickjs_engine: use NDK 28.2.13676358 and link NDK liblog"
+                    )
                 } catch (e: Exception) {
                     logger.warn("quickjs_engine liblog patch failed: $e")
                 }

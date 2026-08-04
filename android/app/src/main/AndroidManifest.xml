@@ -19,7 +19,7 @@
     -->
     <uses-permission android:name="android.permission.CREDENTIAL_MANAGER_SET_ORIGIN"/>
     <application
-        android:label="FluxDO"
+        android:label="IDCFlare"
         android:name=".FluxdoApplication"
         android:icon="@mipmap/ic_launcher"
         android:networkSecurityConfig="@xml/network_security_config">
@@ -47,53 +47,53 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <data android:scheme="fluxdo-launch" />
+                <data android:scheme="idcflare-launch" />
             </intent-filter>
-            <!-- Deep Links for linux.do - 话题链接 -->
+            <!-- Deep Links for IDC Flare - 话题链接 -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="linux.do" android:pathPrefix="/t/" />
+                <data android:scheme="https" android:host="idcflare.com" android:pathPrefix="/t/" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="linux.do" android:pathPrefix="/t/" />
+                <data android:scheme="http" android:host="idcflare.com" android:pathPrefix="/t/" />
             </intent-filter>
-            <!-- Deep Links for linux.do - 用户链接 -->
+            <!-- Deep Links for IDC Flare - 用户链接 -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="linux.do" android:pathPrefix="/u/" />
+                <data android:scheme="https" android:host="idcflare.com" android:pathPrefix="/u/" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="linux.do" android:pathPrefix="/u/" />
+                <data android:scheme="http" android:host="idcflare.com" android:pathPrefix="/u/" />
             </intent-filter>
-            <!-- Deep Links for linux.do - 邮箱链接登录 -->
+            <!-- Deep Links for IDC Flare - 邮箱链接登录 -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="linux.do" android:pathPrefix="/session/email-login/" />
+                <data android:scheme="https" android:host="idcflare.com" android:pathPrefix="/session/email-login/" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="linux.do" android:pathPrefix="/session/email-login/" />
+                <data android:scheme="http" android:host="idcflare.com" android:pathPrefix="/session/email-login/" />
             </intent-filter>
             <!-- Custom URL Scheme -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="fluxdo" />
+                <data android:scheme="idcflare" />
                 <!-- 浏览器授权登录回调:discourse://auth_redirect 为
                      Discourse 站点 allowed_user_api_auth_redirects 默认白名单,
                      无需站方加白(DiscourseHub 同款流程) -->

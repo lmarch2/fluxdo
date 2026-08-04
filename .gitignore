@@ -76,6 +76,9 @@ ios/rust_libs/
 # Codex
 .codex/
 
+# Local release artifacts
+/dist/
+
 # Melos
 .melos_tool/
 packages/ai_model_manager/pubspec.lock

@@ -42,7 +42,7 @@ Future<void> main(List<String> args) async {
   }
 
   final ipaDir = Directory('build/ios/ipa')..createSync(recursive: true);
-  final ipaPath = p.join(ipaDir.path, 'fluxdo-$version-nosign.ipa');
+  final ipaPath = p.join(ipaDir.path, 'idcflare-$version-nosign.ipa');
 
   stdout.writeln('==> 构建 iOS 无签名 IPA ($version)');
   await runOrExit(
@@ -57,7 +57,7 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
 
-  final tempDir = await Directory.systemTemp.createTemp('fluxdo_ipa_');
+  final tempDir = await Directory.systemTemp.createTemp('idcflare_ipa_');
   try {
     final payloadDir = Directory(p.join(tempDir.path, 'Payload'))..createSync(recursive: true);
     await _copyDirectory(runnerApp, Directory(p.join(payloadDir.path, 'Runner.app')));

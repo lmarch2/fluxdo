@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_icons/app_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants.dart';
 import '../l10n/s.dart';
 import '../services/auth_session.dart';
 import '../services/cf_challenge_service.dart';
@@ -20,12 +21,12 @@ import '../widgets/common/floating_logo.dart';
 import 'package:m3e_ui/m3e_ui.dart';
 import 'webview_login_page.dart';
 
-/// linux.do 原生登录页。
+/// IDC Flare 原生登录页。
 ///
 /// 主路径走 [DiscourseService.loginWithPassword] (在 `_LoginMixin` 里),
 /// 不加载 Discourse Ember bundle, 绕开 iOS 15 的 ES2022 `static{}` 兼容问题。
 ///
-/// 流程对齐 linux.do 网页:
+/// 流程对齐 IDC Flare 网页:
 /// 1. 弹 hcaptcha 人机验证 (mini WebView, 只加载几 KB hcaptcha widget)
 /// 2. POST /hcaptcha/create.json 用 token 换 h_captcha_temp_id cookie
 /// 3. POST /session.json 真正登录
@@ -34,8 +35,6 @@ import 'webview_login_page.dart';
 /// 失败 / 高级场景 (OAuth / 注册 / 找回密码 / 2FA 走 backup code 等) 兜底跳
 /// [WebViewLoginPage]。
 ///
-/// linux.do 的 hcaptcha sitekey 写死, 后续可从 PreloadedDataService 动态拿。
-const String _kLinuxDoHcaptchaSiteKey = 'a776b4ac-8c4c-441e-986a-c6ee9ed8cf08';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -200,7 +199,7 @@ class _LoginPageState extends State<LoginPage>
     // 2FA 通过 onNeedSecondFactor 回调弹 TOTP, 由 dialog 内同一 WebView 重试。
     final result = await showWebViewLoginDialog(
       context,
-      siteKey: _kLinuxDoHcaptchaSiteKey,
+      siteKey: AppConstants.hcaptchaSiteKey,
       identifier: identifier,
       password: password,
       hcaptchaCreateEndpoint: hcaptchaEndpoint,
@@ -342,7 +341,7 @@ class _LoginPageState extends State<LoginPage>
                           _entry(
                             1,
                             Text(
-                              'LINUX.DO',
+                              'IDC FLARE',
                               textAlign: TextAlign.center,
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.w700,
@@ -426,8 +425,9 @@ class _LoginPageState extends State<LoginPage>
                   )
                 : LoginForm(
                     onSubmit: _handleSubmit,
-                    onForgotPassword: () =>
-                        _loginWithWebView('https://linux.do/password-reset'),
+                    onForgotPassword: () => _loginWithWebView(
+                      '${AppConstants.baseUrl}/password-reset',
+                    ),
                     savedUsername: _savedUsername,
                     savedPassword: _savedPassword,
                   ),

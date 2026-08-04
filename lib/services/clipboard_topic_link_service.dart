@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants.dart';
 import '../utils/discourse_url_parser.dart';
 
 class ClipboardTopicLinkCandidate {
@@ -23,8 +24,8 @@ class ClipboardTopicLinkService {
   static const String lastPromptedHashPrefsKey =
       'pref_clipboard_topic_link_last_prompted_hash';
 
-  static final RegExp _linuxDoUrlRegex = RegExp(
-    r'(?:(?:https?:)?//)?(?:www\.)?linux\.do(?::\d+)?/[^\s<>"\]\)）}】》]+',
+  static final RegExp _idcFlareUrlRegex = RegExp(
+    r'(?:(?:https?:)?//)?(?:www\.)?idcflare\.com(?::\d+)?/[^\s<>"\]\)）}】》]+',
     caseSensitive: false,
   );
 
@@ -75,7 +76,7 @@ class ClipboardTopicLinkService {
   }
 
   ClipboardTopicLinkCandidate? findFirstTopicLink(String text) {
-    for (final match in _linuxDoUrlRegex.allMatches(text)) {
+    for (final match in _idcFlareUrlRegex.allMatches(text)) {
       final rawUrl = _trimTrailingPunctuation(match.group(0)!);
       if (!_hasValidLeadingBoundary(text, match.start)) continue;
 
@@ -101,7 +102,7 @@ class ClipboardTopicLinkService {
     if (_looksEmbeddedInAnotherUrl(text, start)) return false;
 
     final previous = text.codeUnitAt(start - 1);
-    // 前一个字符是冒号一律拒绝，覆盖 ://linux.do 与 mailto:linux.do 等情况
+    // 前一个字符是冒号一律拒绝，覆盖 ://idcflare.com 与 mailto: 等情况
     if (previous == 0x3a) return false;
     if (previous == 0x3d || previous == 0x26) return false;
 
@@ -167,7 +168,8 @@ class ClipboardTopicLinkService {
 
   static bool _isAllowedHost(String host) {
     final normalizedHost = host.toLowerCase();
-    return normalizedHost == 'linux.do' || normalizedHost == 'www.linux.do';
+    return normalizedHost == AppConstants.siteHost ||
+        normalizedHost == 'www.${AppConstants.siteHost}';
   }
 
   static bool _isSupportedTopicPath(String path) {

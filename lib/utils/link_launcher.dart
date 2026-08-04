@@ -18,7 +18,7 @@ import 'discourse_url_parser.dart';
 import 'link_security.dart';
 import 'url_helper.dart';
 
-const _browserChannel = MethodChannel('com.github.lingyan000.fluxdo/browser');
+const _browserChannel = MethodChannel('com.fdcflare.client/browser');
 
 /// 检查 URL 是否属于站点内部链接（主域名或子域名）
 bool isInternalUrl(Uri uri) {

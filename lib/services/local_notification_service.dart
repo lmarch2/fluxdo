@@ -33,9 +33,9 @@ class LocalNotificationService {
     );
     const linuxSettings = LinuxInitializationSettings(defaultActionName: 'Open');
     const windowsSettings = WindowsInitializationSettings(
-      appName: 'FluxDO',
-      appUserModelId: 'Com.FluxDO.FluxDO',
-      guid: 'e965ef8c-b676-47c1-b6e7-297d63942974',
+      appName: 'IDCFlare',
+      appUserModelId: 'Com.IDCFlare.Client',
+      guid: '30ed049a-5156-4e9c-bcf2-a9c5b915adc7',
     );
 
     const settings = InitializationSettings(

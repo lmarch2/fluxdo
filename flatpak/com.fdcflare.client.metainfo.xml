@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.fdcflare.client</id>
+  <name>IDCFlare</name>
+  <summary>Unofficial IDC Flare client built with Flutter</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  <launchable type="desktop-id">com.fdcflare.client.desktop</launchable>
+  <description>
+    <p>IDCFlare is an unofficial Flutter-based client for the IDC Flare community.</p>
+  </description>
+  <url type="homepage">https://idcflare.com/</url>
+  <content_rating type="oars-1.1"/>
+  <developer id="com.fdcflare">
+    <name>IDCFlare contributors</name>
+  </developer>
+  <provides>
+    <binary>idcflare</binary>
+  </provides>
+</component>

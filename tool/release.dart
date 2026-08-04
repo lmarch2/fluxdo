@@ -149,10 +149,7 @@ Future<void> main(List<String> args) async {
   stdout.writeln('发版成功');
   stdout.writeln('==========================================');
   stdout.writeln('Tag: $tagName');
-  stdout.writeln(
-    'GitHub Actions: https://github.com/Lingyan000/fluxdo/actions',
-  );
-  stdout.writeln('Releases: https://github.com/Lingyan000/fluxdo/releases');
+  stdout.writeln('标签已推送，请在当前仓库的 Actions 与 Releases 页面查看进度。');
   stdout.writeln('==========================================');
   stdout.writeln('');
   stdout.writeln(

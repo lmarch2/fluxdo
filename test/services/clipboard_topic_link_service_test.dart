@@ -17,12 +17,12 @@ void main() {
   group('ClipboardTopicLinkService.findFirstTopicLink', () {
     test('识别支持的话题链接格式', () {
       final cases = <String, String>{
-        'https://linux.do/t/123': 'https://linux.do/t/123',
-        'https://linux.do/t/123/5': 'https://linux.do/t/123/5',
-        'https://linux.do/t/topic-slug/123':
-            'https://linux.do/t/topic-slug/123',
-        'https://linux.do/t/topic-slug/123/5':
-            'https://linux.do/t/topic-slug/123/5',
+        'https://idcflare.com/t/123': 'https://idcflare.com/t/123',
+        'https://idcflare.com/t/123/5': 'https://idcflare.com/t/123/5',
+        'https://idcflare.com/t/topic-slug/123':
+            'https://idcflare.com/t/topic-slug/123',
+        'https://idcflare.com/t/topic-slug/123/5':
+            'https://idcflare.com/t/topic-slug/123/5',
       };
 
       for (final entry in cases.entries) {
@@ -36,50 +36,50 @@ void main() {
 
     test('从任意文本中提取第一个有效话题链接', () {
       final candidate = service.findFirstTopicLink(
-        '先忽略 https://linux.do/u/user，再打开 https://linux.do/t/first/101 和 https://linux.do/t/second/202',
+        '先忽略 https://idcflare.com/u/user，再打开 https://idcflare.com/t/first/101 和 https://idcflare.com/t/second/202',
       );
 
       expect(candidate, isNotNull);
-      expect(candidate!.normalizedUrl, 'https://linux.do/t/first/101');
+      expect(candidate!.normalizedUrl, 'https://idcflare.com/t/first/101');
     });
 
     test('保留 query 和 fragment，并统一 scheme 与 host 大小写', () {
       final candidate = service.findFirstTopicLink(
-        '看看 HTTPS://WWW.LINUX.DO:443/t/topic-slug/123/5?foo=Bar#post_5.',
+        '看看 HTTPS://WWW.IDCFLARE.COM:443/t/topic-slug/123/5?foo=Bar#post_5.',
       );
 
       expect(candidate, isNotNull);
       expect(
         candidate!.normalizedUrl,
-        'https://www.linux.do/t/topic-slug/123/5?foo=Bar#post_5',
+        'https://www.idcflare.com/t/topic-slug/123/5?foo=Bar#post_5',
       );
     });
 
-    test('支持无 scheme 的 linux.do 链接', () {
-      final candidate = service.findFirstTopicLink('linux.do/t/123、');
+    test('支持无 scheme 的 idcflare.com 链接', () {
+      final candidate = service.findFirstTopicLink('idcflare.com/t/123、');
 
       expect(candidate, isNotNull);
-      expect(candidate!.normalizedUrl, 'https://linux.do/t/123');
+      expect(candidate!.normalizedUrl, 'https://idcflare.com/t/123');
     });
 
-    test('用户页、登录链接、普通页面、非 linux.do 域名不触发', () {
+    test('用户页、登录链接、普通页面、非 idcflare.com 域名不触发', () {
       final invalidTexts = <String>[
-        'https://linux.do/u/user',
-        'https://linux.do/session/email-login/token',
-        'https://linux.do/latest',
+        'https://idcflare.com/u/user',
+        'https://idcflare.com/session/email-login/token',
+        'https://idcflare.com/latest',
         'https://example.com/t/123',
-        'https://notlinux.do/t/123',
-        'https://meta.linux.do/t/123',
-        'https://example.com/linux.do/t/123',
-        'https://example.com/?next=https://linux.do/t/123',
-        'https://example.com/?a=1&next=https://linux.do/t/123',
-        'https://example.com/?next=(https://linux.do/t/123)',
-        'https://example.com/?next=foo:https://linux.do/t/123',
-        'mailto:linux.do/t/123',
-        'foo:linux.do/t/123/5',
-        'https://linux.do/t/topic-slug',
-        'https://linux.do/t/123/not-post-number',
-        'https://linux.do/t/topic-slug/123/not-post-number',
+        'https://notidcflare.com/t/123',
+        'https://meta.idcflare.com/t/123',
+        'https://example.com/idcflare.com/t/123',
+        'https://example.com/?next=https://idcflare.com/t/123',
+        'https://example.com/?a=1&next=https://idcflare.com/t/123',
+        'https://example.com/?next=(https://idcflare.com/t/123)',
+        'https://example.com/?next=foo:https://idcflare.com/t/123',
+        'mailto:idcflare.com/t/123',
+        'foo:idcflare.com/t/123/5',
+        'https://idcflare.com/t/topic-slug',
+        'https://idcflare.com/t/123/not-post-number',
+        'https://idcflare.com/t/topic-slug/123/not-post-number',
       ];
 
       for (final text in invalidTexts) {
@@ -95,7 +95,7 @@ void main() {
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
             if (call.method == 'Clipboard.getData') {
               readCount++;
-              return <String, dynamic>{'text': 'https://linux.do/t/123'};
+              return <String, dynamic>{'text': 'https://idcflare.com/t/123'};
             }
             return null;
           });
@@ -110,7 +110,7 @@ void main() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
             if (call.method == 'Clipboard.getData') {
-              return <String, dynamic>{'text': 'https://linux.do:443/t/123'};
+              return <String, dynamic>{'text': 'https://idcflare.com:443/t/123'};
             }
             return null;
           });
@@ -119,7 +119,7 @@ void main() {
       final second = await service.checkClipboard(enabled: true);
 
       expect(first, isNotNull);
-      expect(first!.normalizedUrl, 'https://linux.do/t/123');
+      expect(first!.normalizedUrl, 'https://idcflare.com/t/123');
       expect(second, isNotNull);
       expect(second!.normalizedHash, first.normalizedHash);
     });
@@ -128,7 +128,7 @@ void main() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
             if (call.method == 'Clipboard.getData') {
-              return <String, dynamic>{'text': 'https://linux.do:443/t/123'};
+              return <String, dynamic>{'text': 'https://idcflare.com:443/t/123'};
             }
             return null;
           });
@@ -139,18 +139,18 @@ void main() {
 
       final second = await service.checkClipboard(enabled: true);
 
-      expect(first.normalizedUrl, 'https://linux.do/t/123');
+      expect(first.normalizedUrl, 'https://idcflare.com/t/123');
       expect(second, isNull);
     });
 
     test('传入已持久化的 hash 时不重复返回同一链接', () async {
-      final known = service.findFirstTopicLink('https://linux.do/t/123');
+      final known = service.findFirstTopicLink('https://idcflare.com/t/123');
       expect(known, isNotNull);
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
             if (call.method == 'Clipboard.getData') {
-              return <String, dynamic>{'text': 'https://linux.do:443/t/123'};
+              return <String, dynamic>{'text': 'https://idcflare.com:443/t/123'};
             }
             return null;
           });
@@ -166,7 +166,7 @@ void main() {
     test('标记已提示时写入持久化 hash', () async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      final candidate = service.findFirstTopicLink('https://linux.do/t/123');
+      final candidate = service.findFirstTopicLink('https://idcflare.com/t/123');
       expect(candidate, isNotNull);
 
       await service.markPrompted(candidate!, prefs: prefs);
