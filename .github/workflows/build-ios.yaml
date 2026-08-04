@@ -1,0 +1,85 @@
+name: Build iOS IPA
+
+run-name: Build unsigned iOS IPA from ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Optional existing release tag to receive the IPA
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-ios-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim,x86_64-apple-ios
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: core/doh_proxy
+          key: ios-release
+
+      - name: Configure Git for CocoaPods
+        run: git config --global url."https://x-access-token:${{ github.token }}@github.com/".insteadOf "https://github.com/"
+
+      - name: Build unsigned IPA
+        run: |
+          dart tool/flutterw.dart build ios --release --no-codesign
+          app_path="build/ios/iphoneos/Runner.app"
+          test -f "${app_path}/Runner"
+          nm -gU "${app_path}/Runner" | grep "_doh_proxy_start_with_config_json"
+
+          mkdir -p dist/Payload
+          ditto "${app_path}" dist/Payload/Runner.app
+          (
+            cd dist
+            zip -qry IDCFlare-0.2.25-unsigned.ipa Payload
+            shasum -a 256 IDCFlare-0.2.25-unsigned.ipa > IDCFlare-0.2.25-unsigned.ipa.sha256
+          )
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IDCFlare-iOS-unsigned
+          path: |
+            dist/IDCFlare-0.2.25-unsigned.ipa
+            dist/IDCFlare-0.2.25-unsigned.ipa.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Attach to release
+        if: inputs.release_tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          files: |
+            dist/IDCFlare-0.2.25-unsigned.ipa
+            dist/IDCFlare-0.2.25-unsigned.ipa.sha256
+          fail_on_unmatched_files: true
+          overwrite_files: true
