@@ -42,7 +42,7 @@ Future<void> main(List<String> args) async {
   }
 
   final ipaDir = Directory('build/ios/ipa')..createSync(recursive: true);
-  final ipaPath = p.join(ipaDir.path, 'idcflare-$version-nosign.ipa');
+  final ipaPath = p.join(ipaDir.path, 'fluxidc-$version-nosign.ipa');
 
   stdout.writeln('==> 构建 iOS 无签名 IPA ($version)');
   await runOrExit(

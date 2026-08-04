@@ -13,6 +13,9 @@ env:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    env:
+      GCP_WIF_PROVIDER: ${{ secrets.GCP_WIF_PROVIDER }}
+      GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}
     permissions:
       contents: read
       id-token: write
@@ -157,17 +160,17 @@ jobs:
           cmp -s core/doh_proxy/certs/ca.der android/app/src/main/res/raw/proxy_ca.der
           cmp -s core/doh_proxy/certs/ca.crt assets/certs/proxy_ca.pem
           mkdir -p dist
-          mv build/app/outputs/flutter-apk/app-release.apk dist/idcflare-${{ matrix.arch }}.apk
+          mv build/app/outputs/flutter-apk/app-release.apk dist/fluxidc-${{ matrix.arch }}.apk
 
       - name: Authenticate to Google Cloud
-        if: startsWith(matrix.platform, 'android') && secrets.GCP_WIF_PROVIDER != '' && secrets.GCP_SA_EMAIL != ''
+        if: startsWith(matrix.platform, 'android') && env.GCP_WIF_PROVIDER != '' && env.GCP_SA_EMAIL != ''
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
-          service_account: ${{ secrets.GCP_SA_EMAIL }}
+          workload_identity_provider: ${{ env.GCP_WIF_PROVIDER }}
+          service_account: ${{ env.GCP_SA_EMAIL }}
 
       - name: Upload Dart symbols to Crashlytics
-        if: startsWith(matrix.platform, 'android') && secrets.GCP_WIF_PROVIDER != '' && secrets.GCP_SA_EMAIL != ''
+        if: startsWith(matrix.platform, 'android') && env.GCP_WIF_PROVIDER != '' && env.GCP_SA_EMAIL != ''
         run: |
           npx -y firebase-tools@latest crashlytics:symbols:upload \
             --app=1:98542877021:android:e555169791c86bb9c950b4 \
@@ -191,8 +194,8 @@ jobs:
           cd build/ios/iphoneos
           mkdir Payload
           cp -r Runner.app Payload/
-          zip -r idcflare-unsigned.ipa Payload
-          mv idcflare-unsigned.ipa ../../../dist/
+          zip -r fluxidc-unsigned.ipa Payload
+          mv fluxidc-unsigned.ipa ../../../dist/
 
       - name: Install macOS dependencies
         if: matrix.platform == 'macos'
@@ -230,6 +233,7 @@ jobs:
           sudo security add-trusted-cert -d -p codeSign -r trustRoot \
             -k /Library/Keychains/System.keychain "$RUNNER_TEMP/codesign.cer"
           rm -f "$RUNNER_TEMP/codesign.p12"
+          # Keep the existing certificate identity until the stored P12 secret is rotated.
           security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -q "IDCFlare Code Signing"
           # 通过 Local.xcconfig 覆盖签名身份(与本地开发同一机制)
           printf '%s\n' \
@@ -266,7 +270,7 @@ jobs:
         run: |
           cat > dmg-config.json << 'DMGEOF'
           {
-            "title": "IDCFlare",
+            "title": "FluxIDC",
             "contents": [
               { "x": 448, "y": 344, "type": "link", "path": "/Applications" },
               { "x": 192, "y": 344, "type": "file", "path": "build/macos/Build/Products/Release/idcflare.app" }
@@ -276,7 +280,7 @@ jobs:
             }
           }
           DMGEOF
-          appdmg dmg-config.json "dist/idcflare-macos-${{ matrix.arch }}.dmg"
+          appdmg dmg-config.json "dist/fluxidc-macos-${{ matrix.arch }}.dmg"
 
       - name: Setup NuGet
         if: matrix.platform == 'windows'
@@ -299,7 +303,7 @@ jobs:
         if: matrix.platform == 'windows'
         run: |
           cd build\windows\x64\runner\Release
-          7z a -tzip "..\..\..\..\..\dist\idcflare-windows-x86_64.zip" .
+          7z a -tzip "..\..\..\..\..\dist\fluxidc-windows-x86_64.zip" .
 
       - name: Build Windows Installer (exe)
         if: matrix.platform == 'windows'
@@ -346,7 +350,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: flatpak-source-tree-internal
-          path: .artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz
+          path: .artifacts/flatpak/fluxidc-flatpak-source-tree.tar.gz
           if-no-files-found: error
           overwrite: true
 
@@ -371,7 +375,7 @@ jobs:
         id: fetch
         run: |
           mkdir -p dist
-          asset="idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst"
+          asset="fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst"
           base_url="https://github.com/${{ github.repository }}/releases/download/flatpak-wpe-layer-${{ steps.layer.outputs.version }}"
           if curl -fsIL "${base_url}/${asset}" > /dev/null; then
             curl -fL "${base_url}/${asset}" -o "dist/${asset}"
@@ -402,7 +406,7 @@ jobs:
             flatpak/com.fdcflare.client.wpe-layer.yml
           bash scripts/ci/flatpak/package_wpe_layer.sh \
             flatpak_wpe_layer \
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst
 
       - name: Publish WPE layer release on cache miss
         if: steps.fetch.outputs.hit != 'true'
@@ -411,12 +415,12 @@ jobs:
           tag_name: flatpak-wpe-layer-${{ steps.layer.outputs.version }}
           name: Flatpak WPE Layer ${{ steps.layer.outputs.version }}
           body: |
-            Prebuilt Flatpak WPE dependency layer for IDCFlare.
+            Prebuilt Flatpak WPE dependency layer for FluxIDC.
           prerelease: true
           make_latest: false
           files: |
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
           fail_on_unmatched_files: true
           overwrite_files: true
         env:
@@ -427,8 +431,8 @@ jobs:
         with:
           name: flatpak-wpe-layer-current
           path: |
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
           if-no-files-found: error
           overwrite: true
 
@@ -461,7 +465,7 @@ jobs:
           echo "解包前:" && df -h /
           rm -rf flatpak/stage/source-tree
           mkdir -p flatpak/stage/source-tree
-          tar -xzf .artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz -C flatpak/stage/source-tree
+          tar -xzf .artifacts/flatpak/fluxidc-flatpak-source-tree.tar.gz -C flatpak/stage/source-tree
           rm -rf .artifacts/flatpak
           ls -la flatpak/stage/source-tree
           du -sh flatpak/stage/source-tree flatpak/stage/wpe-layer || true
@@ -471,7 +475,7 @@ jobs:
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           manifest-path: flatpak/com.fdcflare.client.yml
-          bundle: idcflare-linux-x86_64.flatpak
+          bundle: fluxidc-linux-x86_64.flatpak
           branch: stable
           repository-name: flathub
           arch: x86_64
@@ -482,7 +486,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifact-linux-flatpak-x86_64
-          path: idcflare-linux-x86_64.flatpak
+          path: fluxidc-linux-x86_64.flatpak
           if-no-files-found: error
           overwrite: true
 
@@ -689,8 +693,8 @@ jobs:
         run: |
           VERSION="${GITHUB_REF#refs/tags/v}"
           VERSION_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/idcflare-unsigned.ipa"
-          IPA_SIZE=$(stat -c%s "./dist/idcflare-unsigned.ipa" 2>/dev/null || stat -f%z "./dist/idcflare-unsigned.ipa")
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/v${VERSION}/fluxidc-unsigned.ipa"
+          IPA_SIZE=$(stat -c%s "./dist/fluxidc-unsigned.ipa" 2>/dev/null || stat -f%z "./dist/fluxidc-unsigned.ipa")
           # 从 plain 版本按段落边界截断到 1500 字符以内，避免硬截到段落中间
           VERSION_DESC=$(awk 'BEGIN{RS=""; ORS="\n\n"; n=0} {n+=length($0)+2; if(n>1500) exit; print}' release_notes.txt)
 

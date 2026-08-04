@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=IDCFlare
+Name=FluxIDC
 Comment=IDC Flare unofficial client
 Exec=idcflare %u
 Icon=com.fdcflare.client

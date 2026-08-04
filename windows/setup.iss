@@ -1,6 +1,6 @@
-#define MyAppName "IDCFlare"
+#define MyAppName "FluxIDC"
 #define MyAppExeName "idcflare.exe"
-#define MyAppPublisher "IDCFlare contributors"
+#define MyAppPublisher "FluxIDC contributors"
 #define MyAppURL "https://idcflare.com"
 
 [Setup]
@@ -15,7 +15,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=..\dist
-OutputBaseFilename=idcflare-windows-x86_64-setup
+OutputBaseFilename=fluxidc-windows-x86_64-setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

@@ -130,7 +130,7 @@ class ShareImageWidget extends ConsumerWidget {
         ),
         const SizedBox(width: 8),
         Text(
-          'IDC FLARE',
+          'FLUXIDC',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

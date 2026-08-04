@@ -13,7 +13,7 @@ class AppConstants {
   /// 当前站点自定义配置
   static final SiteCustomization siteCustomization = idcflareCustomization;
 
-  static const String appName = 'IDCFlare';
+  static const String appName = 'FluxIDC';
   static const String siteName = 'IDC Flare';
   static const String siteHost = 'idcflare.com';
   static const String customScheme = 'idcflare';

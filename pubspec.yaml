@@ -1,7 +1,7 @@
 name: fluxdo
 description: "IDC Flare 非官方跨平台客户端，基于 FluxDO。"
 publish_to: 'none'
-version: 0.2.25+2026072418
+version: 0.2.25+2026080401
 
 environment:
   sdk: ^3.10.4
@@ -216,7 +216,6 @@ flutter:
         # Flutter 3.41+ FontWeight 会映射到 wght variation axis，因此即使
         # 不显式声明 weight，TextStyle(fontWeight: FontWeight.wXXX) 也能精准命中。
         - asset: assets/fonts/MiSansVF.ttf
-
 
 
 

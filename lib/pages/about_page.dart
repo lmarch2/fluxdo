@@ -214,7 +214,7 @@ class _AboutPageState extends State<AboutPage> {
             child: Column(
               children: [
                 Text(
-                  'IDCFlare',
+                  'FluxIDC',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: theme.colorScheme.onSurface,
@@ -254,7 +254,7 @@ class _AboutPageState extends State<AboutPage> {
                   title: context.l10n.about_openSourceLicense,
                   onTap: () => showLicensePage(
                     context: context,
-                    applicationName: 'IDCFlare',
+                    applicationName: 'FluxIDC',
                     applicationVersion: _version,
                     applicationLegalese: context.l10n.about_legalese,
                   ),

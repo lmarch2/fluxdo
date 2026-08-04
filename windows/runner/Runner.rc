@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "IDCFlare contributors" "\0"
-            VALUE "FileDescription", "IDCFlare" "\0"
+            VALUE "CompanyName", "FluxIDC contributors" "\0"
+            VALUE "FileDescription", "FluxIDC" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "IDCFlare" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 IDCFlare contributors. GPL-3.0." "\0"
+            VALUE "InternalName", "FluxIDC" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 FluxIDC contributors. GPL-3.0." "\0"
             VALUE "OriginalFilename", "idcflare.exe" "\0"
-            VALUE "ProductName", "IDCFlare" "\0"
+            VALUE "ProductName", "FluxIDC" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 ARTIFACT_ROOT="${PROJECT_ROOT}/.artifacts/flatpak"
 SOURCE_TREE_ROOT="${ARTIFACT_ROOT}/source-tree"
-ARTIFACT_PATH="${ARTIFACT_ROOT}/idcflare-flatpak-source-tree.tar.gz"
+ARTIFACT_PATH="${ARTIFACT_ROOT}/fluxidc-flatpak-source-tree.tar.gz"
 PUB_CACHE_DIR="${PUB_CACHE:-${PROJECT_ROOT}/.pub-cache}"
 NLOHMANN_JSON_VERSION="${NLOHMANN_JSON_VERSION:-3.11.3}"
 

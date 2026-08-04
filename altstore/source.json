@@ -1,11 +1,11 @@
 {
-  "name": "IDCFlare Source",
+  "name": "FluxIDC Source",
   "identifier": "com.fdcflare.client.AltStore",
   "apps": [
     {
-      "name": "IDCFlare",
+      "name": "FluxIDC",
       "bundleIdentifier": "com.fdcflare.client",
-      "developerName": "IDCFlare contributors",
+      "developerName": "FluxIDC contributors",
       "localizedDescription": "An unofficial cross-platform client for IDC Flare.",
       "iconURL": "https://idcflare.com/uploads/default/original/1X/27321bd8c4301b325bf5e4524772bb39ece5424e.png",
       "versions": []

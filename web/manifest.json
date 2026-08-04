@@ -1,6 +1,6 @@
 {
-    "name": "IDCFlare",
-    "short_name": "IDCFlare",
+    "name": "FluxIDC",
+    "short_name": "FluxIDC",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",

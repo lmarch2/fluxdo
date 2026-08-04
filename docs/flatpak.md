@@ -15,7 +15,7 @@ CI 分成三部分：
      - `woff2`
      - `libwpe`
      - `wpewebkit`
-   - 把 Flatpak build root 下的 `files/` 打成 `idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst`。
+   - 把 Flatpak build root 下的 `files/` 打成 `fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst`。
    - 作为 workflow artifact 上传，并发布到 `flatpak-wpe-layer-<version>` 这个 prerelease tag。
    - 版本号由 `flatpak/wpe-layer.version` 控制，只有 WPE 依赖变化时才需要 bump。
 
@@ -88,7 +88,7 @@ CI 分成三部分：
 bash scripts/ci/flatpak/run_local_package.sh
 ```
 
-如果只想复用已经准备好的 `.artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz`，可以跳过 prepare：
+如果只想复用已经准备好的 `.artifacts/flatpak/fluxidc-flatpak-source-tree.tar.gz`，可以跳过 prepare：
 
 ```bash
 SKIP_PREPARE=1 bash scripts/ci/flatpak/run_local_package.sh
@@ -105,9 +105,9 @@ export PUB_CACHE="$PWD/.pub-cache"
 bash scripts/ci/flatpak/prepare_source_tree.sh
 rm -rf flatpak/stage/source-tree
 mkdir -p flatpak/stage/source-tree
-tar -xzf .artifacts/flatpak/idcflare-flatpak-source-tree.tar.gz -C flatpak/stage/source-tree
+tar -xzf .artifacts/flatpak/fluxidc-flatpak-source-tree.tar.gz -C flatpak/stage/source-tree
 flatpak-builder --user --install-deps-from=flathub --force-clean --repo=repo flatpak_app flatpak/com.fdcflare.client.yml
-flatpak build-bundle repo idcflare-linux-x86_64.flatpak com.fdcflare.client stable
+flatpak build-bundle repo fluxidc-linux-x86_64.flatpak com.fdcflare.client stable
 ```
 
 如果只想验证 SDK 里有没有对应开发包，可以按 Flatpak 官方文档提供的方式执行：
@@ -128,7 +128,7 @@ flatpak run --command=pkg-config org.gnome.Sdk//48 --modversion libsecret-1
 如果要本地复用一个已经下载好的 WPE 层归档，可以这样跑：
 
 ```bash
-LOCAL_WPE_LAYER_ARCHIVE=/path/to/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst \
+LOCAL_WPE_LAYER_ARCHIVE=/path/to/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst \
 SKIP_PREPARE=1 \
 bash scripts/ci/flatpak/run_local_package.sh
 ```

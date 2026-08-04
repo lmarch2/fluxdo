@@ -49,15 +49,15 @@ jobs:
           mkdir -p dist
           bash scripts/ci/flatpak/package_wpe_layer.sh \
             flatpak_wpe_layer \
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: flatpak-wpe-layer-gnome48-x86_64
           path: |
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
           if-no-files-found: error
           overwrite: true
 
@@ -67,12 +67,12 @@ jobs:
           tag_name: flatpak-wpe-layer-${{ steps.layer.outputs.version }}
           name: Flatpak WPE Layer ${{ steps.layer.outputs.version }}
           body: |
-            Prebuilt Flatpak WPE dependency layer for IDCFlare.
+            Prebuilt Flatpak WPE dependency layer for FluxIDC.
           prerelease: true
           make_latest: false
           files: |
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst
-            dist/idcflare-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst
+            dist/fluxidc-flatpak-wpe-layer-gnome48-x86_64.tar.zst.sha256
           fail_on_unmatched_files: true
           overwrite_files: true
         env:

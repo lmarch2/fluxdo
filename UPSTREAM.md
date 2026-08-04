@@ -1,6 +1,6 @@
 # Upstream provenance
 
-IDCFlare is a modified distribution of [Lingyan000/fluxdo](https://github.com/Lingyan000/fluxdo).
+FluxIDC is a modified distribution of [Lingyan000/fluxdo](https://github.com/Lingyan000/fluxdo).
 
 ## Imported baseline
 
@@ -11,11 +11,11 @@ IDCFlare is a modified distribution of [Lingyan000/fluxdo](https://github.com/Li
 
 The upstream Git metadata was not copied into this project tree. The two upstream submodule source trees were imported with the application source so a checkout remains buildable without nested Git repositories.
 
-## IDCFlare changes
+## FluxIDC changes
 
 - Replaced the site endpoint, trusted domains and deep-link handling with IDC Flare values.
 - Replaced visible application branding and platform icons with IDC Flare assets.
-- Changed platform identifiers and release artifacts to `com.fdcflare.client` / `idcflare`.
+- Retained the established `com.fdcflare.client` package ID and `idcflare` URL scheme for upgrade compatibility, while user-visible branding and release artifacts use FluxIDC.
 - Disabled Linux.DO-only Credit, CDK, Connect and metaverse integrations.
 - Disabled upstream application updates and crash reporting until independent services are configured.
 
@@ -23,4 +23,4 @@ Internal package names, native method-channel identifiers and the `fluxdo_render
 
 ## License
 
-FluxDO is distributed under GNU GPL v3. IDCFlare keeps the same `LICENSE` and provides this provenance record so upstream authorship and the modified nature of this distribution remain clear.
+FluxDO is distributed under GNU GPL v3. FluxIDC keeps the same `LICENSE` and provides this provenance record so upstream authorship and the modified nature of this distribution remain clear.

@@ -49,6 +49,7 @@ jobs:
         run: git config --global url."https://x-access-token:${{ github.token }}@github.com/".insteadOf "https://github.com/"
 
       - name: Build unsigned IPA
+        id: package
         run: |
           dart tool/flutterw.dart build ios --release --no-codesign
           app_path="build/ios/iphoneos/Runner.app"
@@ -58,21 +59,31 @@ jobs:
           file "${app_path}/Runner" | grep -q "arm64"
           nm -gU "${app_path}/Runner" | grep "_doh_proxy_start_with_config_json"
 
+          version="$(sed -n 's/^version: \([^+]*\).*/\1/p' pubspec.yaml)"
+          build_number="$(sed -n 's/^version: [^+]*+\(.*\)/\1/p' pubspec.yaml)"
+          plist="${app_path}/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "${plist}")" = "com.fdcflare.client"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "${plist}")" = "FluxIDC"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "${plist}")" = "${version}"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "${plist}")" = "${build_number}"
+
+          ipa_name="FluxIDC-${version}-unsigned.ipa"
           mkdir -p dist/Payload
           ditto "${app_path}" dist/Payload/Runner.app
           (
             cd dist
-            zip -qry IDCFlare-0.2.25-unsigned.ipa Payload
-            shasum -a 256 IDCFlare-0.2.25-unsigned.ipa > IDCFlare-0.2.25-unsigned.ipa.sha256
+            zip -qry "${ipa_name}" Payload
+            shasum -a 256 "${ipa_name}" > "${ipa_name}.sha256"
           )
+          echo "ipa_name=${ipa_name}" >> "${GITHUB_OUTPUT}"
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: IDCFlare-iOS-unsigned
+          name: FluxIDC-iOS-unsigned
           path: |
-            dist/IDCFlare-0.2.25-unsigned.ipa
-            dist/IDCFlare-0.2.25-unsigned.ipa.sha256
+            dist/${{ steps.package.outputs.ipa_name }}
+            dist/${{ steps.package.outputs.ipa_name }}.sha256
           if-no-files-found: error
           retention-days: 30
 
@@ -82,7 +93,7 @@ jobs:
         with:
           tag_name: ${{ inputs.release_tag }}
           files: |
-            dist/IDCFlare-0.2.25-unsigned.ipa
-            dist/IDCFlare-0.2.25-unsigned.ipa.sha256
+            dist/${{ steps.package.outputs.ipa_name }}
+            dist/${{ steps.package.outputs.ipa_name }}.sha256
           fail_on_unmatched_files: true
           overwrite_files: true

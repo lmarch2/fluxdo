@@ -677,7 +677,7 @@ class MainApp extends ConsumerWidget {
               navigatorKey: navigatorKey,
               // JankNavObserver 给 [JANK] 日志加导航归因(debug/profile 观测用)
               navigatorObservers: [appRouteObserver, JankNavObserver()],
-              title: 'IDCFlare',
+              title: 'FluxIDC',
               locale: TranslationProvider.of(context).flutterLocale,
               localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,

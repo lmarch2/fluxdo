@@ -94,4 +94,4 @@ bash "${SCRIPT_DIR}/check_bundle.sh" "build/linux/x64/release/bundle"
 
 echo "==> Archiving bundle artifact"
 mkdir -p .artifacts/linux
-tar -C build/linux/x64/release -czf .artifacts/linux/idcflare-linux-bundle.tar.gz bundle
+tar -C build/linux/x64/release -czf .artifacts/linux/fluxidc-linux-bundle.tar.gz bundle

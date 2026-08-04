@@ -10,7 +10,7 @@
 // 用法 1：自签代码签名证书（无需 Apple ID，推荐日常开发使用）。
 // 证书 leaf 稳定后钥匙串按证书授信，「始终允许」一次后 rebuild 不再弹窗。
 // 生成方式见 docs/development.md「macOS 代码签名」一节。
-// FLUXDO_APPLE_CODE_SIGN_IDENTITY_MACOSX = IDCFlare Code Signing
+// FLUXDO_APPLE_CODE_SIGN_IDENTITY_MACOSX = FluxIDC Code Signing
 // FLUXDO_APPLE_CODE_SIGN_STYLE = Manual
 // FLUXDO_APPLE_CODE_SIGNING_ALLOWED = YES
 
